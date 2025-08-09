@@ -3,6 +3,19 @@ import numpy as np
 from utils import black_scholes_greeks, black_scholes_price, option_valuation
 from datetime import datetime
 import sys
+import os
+import glob
+
+OUTPUT_CSV_DIR = os.path.join('outputs', 'csv')
+
+def ensure_dir(path: str) -> None:
+    os.makedirs(path, exist_ok=True)
+
+def find_latest_csv() -> str:
+    candidates = sorted(glob.glob(os.path.join(OUTPUT_CSV_DIR, "*.csv")), key=os.path.getmtime, reverse=True)
+    if not candidates:
+        candidates = sorted(glob.glob("*.csv"), key=os.path.getmtime, reverse=True)
+    return candidates[0] if candidates else ""
 
 def calculate_greeks_and_valuation(row, r=0.063):
     """
@@ -43,7 +56,14 @@ def calculate_greeks_and_valuation(row, r=0.063):
 
 def main():
     # Get CSV filename from user
+    print("If you press Enter, the latest CSV from outputs/csv will be used.")
     csv_file = input("Enter CSV filename from nse_scraper.py: ").strip()
+    if not csv_file:
+        csv_file = find_latest_csv()
+        if not csv_file:
+            print("No CSV files found in outputs/csv or project root.")
+            sys.exit(1)
+        print(f"Using latest CSV: {csv_file}")
     
     try:
         # Read CSV file
@@ -95,8 +115,9 @@ def main():
         # Sort by percentage difference (best undervalued first)
         results_df = results_df.sort_values('Pct_Difference', ascending=False)
         
-        # Save full results
-        output_file = f"valuation_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        # Save full results into outputs/csv
+        ensure_dir(OUTPUT_CSV_DIR)
+        output_file = os.path.join(OUTPUT_CSV_DIR, f"valuation_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv")
         results_df.to_csv(output_file, index=False)
         
         # Display top 10 undervalued options

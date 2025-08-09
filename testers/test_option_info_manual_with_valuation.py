@@ -1,3 +1,7 @@
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
 import yfinance as yf
 from utils import black_scholes_greeks, black_scholes_price, option_valuation
 from datetime import datetime

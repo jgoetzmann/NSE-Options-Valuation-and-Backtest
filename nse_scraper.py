@@ -7,6 +7,12 @@ import sys
 import os
 import random
 
+OUTPUT_JSON_DIR = os.path.join('outputs', 'json')
+OUTPUT_CSV_DIR = os.path.join('outputs', 'csv')
+
+def ensure_dir(path: str) -> None:
+    os.makedirs(path, exist_ok=True)
+
 def get_nse_chain(symbol="NIFTY", max_retries=3, delay_range=(1, 3)):
     """
     Download option-chain JSON from nseindia.com with retry logic.
@@ -74,11 +80,13 @@ def get_nse_chain(symbol="NIFTY", max_retries=3, delay_range=(1, 3)):
     return None
 
 def save_json_with_timestamp(data, symbol, timestamp):
-    """Save raw JSON data with timestamp"""
+    """Save raw JSON data with timestamp under outputs/json"""
+    ensure_dir(OUTPUT_JSON_DIR)
     json_filename = f"nse_raw_{symbol}_{timestamp}.json"
-    with open(json_filename, 'w') as f:
+    json_path = os.path.join(OUTPUT_JSON_DIR, json_filename)
+    with open(json_path, 'w') as f:
         json.dump(data, f, indent=2)
-    return json_filename
+    return json_path
 
 def process_all_options_for_date(data, symbol, target_expiration):
     """
@@ -203,9 +211,9 @@ def main():
         print(f"Failed to fetch data for {symbol}")
         sys.exit(1)
     
-    # Save raw JSON with timestamp
-    json_filename = save_json_with_timestamp(data, symbol, timestamp)
-    print(f"Raw JSON saved: {json_filename}")
+    # Save raw JSON with timestamp to outputs/json
+    json_path = save_json_with_timestamp(data, symbol, timestamp)
+    print(f"Raw JSON saved: {json_path}")
     
     # Show available expiries
     all_expiries = data["records"]["expiryDates"]
@@ -220,17 +228,19 @@ def main():
     df = process_all_options_for_date(data, symbol, target_expiration)
     
     if not df.empty:
-        # Save CSV
+        # Save CSV under outputs/csv
+        ensure_dir(OUTPUT_CSV_DIR)
         csv_filename = f"nse_options_{symbol}_{target_expiration.replace('-', '_')}_{timestamp}.csv"
-        df.to_csv(csv_filename, index=False)
+        csv_path = os.path.join(OUTPUT_CSV_DIR, csv_filename)
+        df.to_csv(csv_path, index=False)
         
         print(f"\n{'='*60}")
         print("PROCESSING RESULTS:")
         print(f"{'='*60}")
         print(f"Symbol: {symbol}")
         print(f"Expiration: {target_expiration}")
-        print(f"Raw JSON: {json_filename}")
-        print(f"Output CSV: {csv_filename}")
+        print(f"Raw JSON: {json_path}")
+        print(f"Output CSV: {csv_path}")
         print(f"Total options processed: {len(df)}")
         print(f"Total strikes processed: {len(df['Strike'].unique())}")
         
@@ -285,9 +295,8 @@ def main():
         print(df.head(10).to_string(index=False))
         
         # File sizes
-        import os
-        json_size = os.path.getsize(json_filename) / (1024*1024)  # MB
-        csv_size = os.path.getsize(csv_filename) / 1024  # KB
+        json_size = os.path.getsize(json_path) / (1024*1024)  # MB
+        csv_size = os.path.getsize(csv_path) / 1024  # KB
         print(f"\nFile sizes:")
         print(f"JSON: {json_size:.1f} MB")
         print(f"CSV: {csv_size:.1f} KB")
