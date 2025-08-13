@@ -21,6 +21,10 @@ print()
 print("1. TESTING CORE FINANCIAL UTILITIES (utils.py)")
 print("-" * 60)
 try:
+    import sys
+    import os
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    
     from utils import (
         black_scholes_price, 
         black_scholes_greeks, 
@@ -57,7 +61,7 @@ print("2. TESTING CSV PROCESSING AND ANALYSIS")
 print("-" * 60)
 try:
     # Find the most recent CSV file
-    csv_dir = "outputs/csv"
+    csv_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "outputs", "csv")
     csv_files = [f for f in os.listdir(csv_dir) if f.endswith('.csv')]
     if not csv_files:
         print("❌ No CSV files found in outputs/csv/")

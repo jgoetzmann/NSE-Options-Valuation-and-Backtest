@@ -21,6 +21,10 @@ print()
 print("1. CORE FINANCIAL ENGINE VALIDATION")
 print("-" * 60)
 try:
+    import sys
+    import os
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    
     from utils import (
         black_scholes_price, 
         black_scholes_greeks, 
@@ -61,7 +65,7 @@ print("2. REAL DATA ANALYSIS AND VALIDATION")
 print("-" * 60)
 try:
     # Load the NSE data
-    csv_path = "outputs/csv/nse_single_date_NIFTY_07_Aug_2025_20250812_165341.csv"
+    csv_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "outputs", "csv", "nse_single_date_NIFTY_07_Aug_2025_20250812_165341.csv")
     df = pd.read_csv(csv_path)
     
     print(f"✅ Data loaded: {df.shape[0]} options, {df.shape[1]} columns")

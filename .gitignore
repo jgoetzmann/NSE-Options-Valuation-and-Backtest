@@ -1,31 +1,6 @@
 # Python cache files
 __pycache__/
-*.py[cod]
-*$py.class
 
-# Virtual environments
-venv/
-env/
-.venv/
-.env
-
-# Project outputs (can be regenerated)
-outputs/csv/*.csv
-outputs/json/*.json
-
-# Logs and temporary files
-*.log
-.DS_Store
-Thumbs.db
-
-# IDE and editor files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Distribution and build files
-build/
-dist/
-*.egg-info/ 
+# Output folders (can be regenerated)
+outputs/csv/
+outputs/json/ 
