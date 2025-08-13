@@ -1,3 +1,40 @@
+#!/usr/bin/env python3
+"""
+Basic US Options Analysis - Greeks Calculator
+============================================
+
+This script provides a simple interactive interface for calculating basic Greeks for individual US options.
+It's designed as a lightweight tool for quick option analysis using yfinance data.
+
+Key Features:
+- Interactive input for symbol, expiration, strike, and option type
+- Real-time market data from yfinance API
+- Basic Greeks calculation (Delta, Gamma, Theta, Vega, Rho)
+- Simple, focused output for quick analysis
+
+Usage:
+    python option_info_manual.py
+    # Enter: ticker symbol (e.g., AAPL)
+    # Enter: expiration date (YYYY-MM-DD)
+    # Enter: strike price
+    # Enter: option type (call/put)
+
+Output:
+- Basic option information (last price, implied volatility)
+- All Greeks values with 4 decimal precision
+
+Dependencies:
+- yfinance: For real-time US options data
+- utils: For Black-Scholes Greeks calculations
+- datetime: For date handling and time calculations
+
+Note: This is the basic version. For advanced valuation analysis including theoretical pricing,
+confidence scoring, and market condition assessment, use option_info_manual_with_valuation.py instead.
+
+Author: NSE Options Analysis Project
+License: See LICENSE file
+"""
+
 import yfinance as yf
 from utils import black_scholes_greeks
 from datetime import datetime

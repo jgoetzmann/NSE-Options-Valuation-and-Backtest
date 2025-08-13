@@ -1,3 +1,46 @@
+#!/usr/bin/env python3
+"""
+NSE Options Data Scraper and Processor
+=====================================
+
+This module provides comprehensive functionality for scraping and processing NSE (National Stock Exchange of India) 
+options data. It's designed to fetch real-time option chain data from NSE's API and process it into structured formats.
+
+Key Features:
+- Fetches option chain data for major NSE indices (NIFTY, BANKNIFTY, FINNIFTY, MIDCPNIFTY, SENSEX)
+- Implements robust retry logic with randomized delays to handle rate limiting
+- Processes ALL available options for a specified expiration date (no limits)
+- Saves both raw JSON data and processed CSV files with timestamps
+- Handles authentication, session management, and error recovery gracefully
+
+Main Functions:
+- get_nse_chain(): Downloads option-chain JSON from nseindia.com with retry logic
+- process_all_options_for_date(): Processes all options for a specific expiration date
+- save_json_with_timestamp(): Saves raw JSON data with timestamp
+- save_csv_with_timestamp(): Saves processed CSV data with timestamp
+
+Output:
+- Raw JSON files saved to outputs/json/ directory
+- Processed CSV files saved to outputs/csv/ directory
+- CSV includes calculated fields like time to expiry, moneyness, and option characteristics
+
+Usage:
+    python nse_scraper.py
+    # Follow prompts to select index and expiration date
+
+Dependencies:
+- requests: For HTTP requests to NSE API
+- pandas: For data processing and CSV operations
+- json: For JSON data handling
+- datetime: For timestamp generation
+- os: For directory operations
+- random: For randomized delays to avoid rate limiting
+- time: For delay implementation
+
+Author: NSE Options Analysis Project
+License: See LICENSE file
+"""
+
 import requests
 import json
 import time

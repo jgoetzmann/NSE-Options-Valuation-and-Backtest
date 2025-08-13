@@ -1,3 +1,66 @@
+#!/usr/bin/env python3
+"""
+Financial Utilities Module - Core Options Analysis Engine
+======================================================
+
+This module contains the core financial calculation engine for options analysis, providing
+professional-grade implementations of Black-Scholes pricing, Greeks calculation, and advanced
+valuation algorithms.
+
+Core Functions:
+1. black_scholes_price(S, K, T, r, sigma, option_type)
+   - Calculates theoretical price for European options using Black-Scholes model
+   - Handles both calls and puts with proper mathematical implementation
+   - Inputs: Spot price, Strike, Time to expiry, Risk-free rate, Volatility, Option type
+
+2. black_scholes_greeks(S, K, T, r, sigma, option_type)
+   - Calculates all major Greeks: Delta, Gamma, Theta, Vega, Rho
+   - Returns normalized values (Vega per 1% vol change, Rho per 1% rate change)
+   - Essential for risk management and portfolio analysis
+
+3. option_valuation(theoretical_price, market_price, ...)
+   - Advanced valuation system considering multiple real-world factors:
+     * Moneyness factor (distance from ATM)
+     * Time decay effects
+     * Volatility environment
+     * Bid-ask spread liquidity
+     * Market confidence factors
+   - Returns: (rating, percentage_difference, confidence_level)
+   - Ratings: strongly undervalued → strongly overvalued
+
+4. simple_option_valuation(theoretical_price, market_price, tolerance)
+   - Legacy simple valuation based on percentage difference
+   - Useful for basic analysis or when detailed factors unavailable
+
+Mathematical Foundation:
+- Implements standard Black-Scholes formulas for European options
+- Uses scipy.stats.norm for cumulative normal distribution
+- Proper handling of edge cases and mathematical constraints
+- Professional-grade precision and error handling
+
+Usage:
+    from utils import black_scholes_price, black_scholes_greeks, option_valuation
+    
+    # Calculate option price
+    price = black_scholes_price(100, 100, 0.25, 0.05, 0.2, 'call')
+    
+    # Calculate Greeks
+    greeks = black_scholes_greeks(100, 100, 0.25, 0.05, 0.2, 'call')
+    
+    # Advanced valuation
+    rating, pct_diff, confidence = option_valuation(theo_price, market_price, ...)
+
+Dependencies:
+- math: For mathematical operations (log, sqrt, exp)
+- scipy.stats.norm: For cumulative normal distribution calculations
+
+This module serves as the foundation for all options analysis in the project,
+providing reliable, tested financial calculations used by all other scripts.
+
+Author: NSE Options Analysis Project
+License: See LICENSE file
+"""
+
 import math
 from scipy.stats import norm
 

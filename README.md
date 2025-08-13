@@ -1,13 +1,23 @@
-# Simple Black-Scholes Options Analysis
+# NSE Options Valuation and Backtest Project
+## Professional-Grade Options Analysis Platform
 
-A small toolkit for options analysis that combines Black–Scholes pricing/Greeks, yfinance-based US options lookups, and NSE (India) option-chain scraping and processing.
+A comprehensive toolkit for options analysis that combines Black–Scholes pricing/Greeks, yfinance-based US options lookups, and NSE (India) option-chain scraping and processing. This project provides enterprise-level options analysis capabilities with real-time data processing, advanced valuation algorithms, and comprehensive testing frameworks.
 
-### What you can do
-- Manual US option lookup (yfinance): Greeks and pricing
-- Manual US option lookup with valuation vs market
-- Scrape NSE option-chain data for an index and a single expiration date
-- Process scraped CSVs to compute Greeks, theoretical prices, and valuation
-- Explore large NSE datasets from previously saved raw JSON files
+### 🚀 What You Can Do
+- **Manual US Options Analysis**: Interactive Greeks calculation and pricing for individual US options
+- **Advanced US Options Valuation**: Sophisticated valuation analysis with confidence scoring and market condition assessment
+- **NSE Data Scraping**: Real-time option-chain data collection from National Stock Exchange of India
+- **Comprehensive Data Processing**: Process large NSE datasets with professional-grade analysis
+- **Advanced Valuation Engine**: Multi-factor valuation considering moneyness, time decay, volatility, and liquidity
+- **Professional Testing Suite**: Comprehensive testing frameworks for development and quality assurance
+
+### 🏗️ Project Architecture
+The project is built with a modular architecture:
+- **Core Engine** (`utils.py`): Black-Scholes calculations, Greeks, and advanced valuation
+- **Data Collection** (`nse_scraper.py`): NSE data scraping with robust error handling
+- **Analysis Tools**: Multiple analysis scripts for different use cases
+- **Testing Framework**: Comprehensive test suites for validation and quality assurance
+- **Output Management**: Organized CSV and JSON output with timestamping
 
 ---
 

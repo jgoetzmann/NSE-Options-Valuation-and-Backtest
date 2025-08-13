@@ -1,3 +1,81 @@
+#!/usr/bin/env python3
+"""
+NSE Data Analysis Tool - Raw JSON Data Exploration
+=================================================
+
+This utility script analyzes raw NSE options data stored in JSON format to provide insights
+into the structure, scope, and characteristics of the scraped data.
+
+Key Features:
+- Analyzes raw NSE JSON files for data exploration
+- Provides comprehensive data scope assessment
+- Shows available expiries and strike ranges
+- Counts available options by type (calls/puts)
+- Displays data structure and field information
+- Estimates total data volume and file sizes
+
+Analysis Capabilities:
+1. Data Scope Assessment
+   - Total strikes available
+   - Total expiries available
+   - Estimated total options count
+   - File size and storage requirements
+
+2. Expiry Analysis
+   - List of all available expiration dates
+   - Chronological ordering
+   - Expiry date formatting validation
+
+3. Strike Analysis
+   - Strike price range (min to max)
+   - Number of unique strikes
+   - Strike price distribution
+
+4. Option Type Analysis
+   - Call options count per expiry
+   - Put options count per expiry
+   - Total options per expiry
+   - Option availability assessment
+
+5. Data Structure Analysis
+   - JSON structure exploration
+   - Available fields and keys
+   - Data format validation
+   - Sample data inspection
+
+Usage:
+    python testers/analyze_nse_data.py
+    # Analyzes the default test JSON file
+    
+    # Or modify the script to analyze different files:
+    analyze_nse_json("your_nse_data.json")
+
+Output:
+- Comprehensive data scope summary
+- Expiry and strike analysis
+- Option counts and availability
+- Data structure information
+- File size and storage metrics
+
+This tool is essential for:
+- Understanding scraped data scope
+- Data quality assessment
+- Storage planning
+- Development and debugging
+- Data exploration and validation
+
+Note: This is a data exploration tool, not a testing module.
+For testing functionality, use the other test modules in this directory.
+
+Dependencies:
+- json: For JSON file parsing
+- pandas: For data manipulation (if needed)
+- os: For file size calculation
+
+Author: NSE Options Analysis Project
+License: See LICENSE file
+"""
+
 import json
 import pandas as pd
 

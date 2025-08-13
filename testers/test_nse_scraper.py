@@ -1,3 +1,74 @@
+#!/usr/bin/env python3
+"""
+NSE Scraper Testing Module - Basic Functionality Validation
+=========================================================
+
+This test module validates the core NSE data scraping functionality by testing the basic
+data fetching and processing capabilities without the full pipeline overhead.
+
+Key Features:
+- Tests NSE API connectivity and data retrieval
+- Validates JSON response parsing and structure
+- Tests basic option data extraction and processing
+- Limited scope testing for development and debugging
+- Focuses on core scraping functionality
+
+Test Coverage:
+1. NSE API Connectivity
+   - Endpoint accessibility
+   - Response status validation
+   - JSON data structure verification
+
+2. Data Extraction
+   - Spot price extraction
+   - Expiration date parsing
+   - Option chain data structure
+   - Basic data validation
+
+3. Processing Pipeline
+   - Option data transformation
+   - Strike price processing
+   - Call/Put data extraction
+   - Basic filtering and validation
+
+4. Error Handling
+   - Network timeout handling
+   - Invalid data handling
+   - Missing field handling
+   - Graceful degradation
+
+Usage:
+    python testers/test_nse_scraper.py
+    # Runs basic NSE scraper functionality tests
+    # Tests with NIFTY index by default
+
+Output:
+- Connection status and API response validation
+- Data structure verification
+- Basic processing pipeline testing
+- Error handling validation
+- Limited dataset processing results
+
+This module is designed for:
+- Quick functionality validation
+- Development debugging
+- Basic integration testing
+- Performance baseline establishment
+
+Note: This is a simplified test compared to full_test.py and final_comprehensive_test.py.
+For complete testing, use those comprehensive test modules instead.
+
+Dependencies:
+- requests: For HTTP requests to NSE API
+- pandas: For data processing
+- json: For JSON data handling
+- datetime: For date parsing
+- time: For delays and timing
+
+Author: NSE Options Analysis Project
+License: See LICENSE file
+"""
+
 import requests
 import json
 import time

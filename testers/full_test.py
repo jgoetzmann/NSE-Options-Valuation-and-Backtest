@@ -1,7 +1,83 @@
 #!/usr/bin/env python3
 """
-MASTER TEST SCRIPT FOR NSE OPTIONS VALUATION AND BACKTEST PROJECT
-Tests all major functionality in one comprehensive run.
+Master Test Script - Comprehensive NSE Options Analysis Testing
+============================================================
+
+This script serves as the primary testing framework for the entire NSE Options Valuation and Backtest project.
+It performs end-to-end testing of all major components in a single comprehensive run.
+
+Test Coverage:
+1. Core Financial Utilities (utils.py)
+   - Black-Scholes pricing validation
+   - Greeks calculation accuracy
+   - Valuation function testing
+   - Edge case handling
+
+2. CSV Processing and Analysis
+   - Data loading and validation
+   - Column structure verification
+   - Statistical analysis
+   - Data quality assessment
+
+3. NSE Data Processing Pipeline
+   - End-to-end data flow testing
+   - Data transformation validation
+   - Output format verification
+   - Performance benchmarking
+
+4. Integration Testing
+   - Cross-module functionality
+   - Data consistency checks
+   - Error handling validation
+   - System reliability testing
+
+5. Performance and Scalability
+   - Processing speed measurement
+   - Memory usage optimization
+   - Large dataset handling
+   - Efficiency benchmarking
+
+6. Data Export and Reporting
+   - Output format validation
+   - Report generation testing
+   - Data integrity verification
+   - Export functionality testing
+
+Key Features:
+- Comprehensive test coverage across all project modules
+- Real-world data validation using actual NSE datasets
+- Performance benchmarking and optimization testing
+- Error handling and edge case validation
+- Professional-grade testing methodology
+- Detailed reporting and analysis
+
+Usage:
+    python testers/full_test.py
+    # Runs complete test suite automatically
+    # Requires existing CSV data from nse_scraper.py
+
+Output:
+- Detailed test results for each component
+- Performance metrics and benchmarks
+- Data quality assessments
+- Error reports and validation results
+- Comprehensive project status summary
+
+This script is essential for:
+- Development and debugging
+- Quality assurance
+- Performance optimization
+- System validation
+- Production readiness assessment
+
+Dependencies:
+- All project modules (utils, nse_scraper, valuation_from_csv)
+- pandas, numpy for data processing
+- datetime, time for timing and logging
+- os, sys for system integration
+
+Author: NSE Options Analysis Project
+License: See LICENSE file
 """
 
 import sys

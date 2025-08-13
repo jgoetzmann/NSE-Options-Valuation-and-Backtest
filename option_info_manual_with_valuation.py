@@ -1,3 +1,55 @@
+#!/usr/bin/env python3
+"""
+Interactive US Options Analysis with Advanced Valuation
+====================================================
+
+This script provides an interactive interface for analyzing individual US options using yfinance data.
+It goes beyond basic Greeks calculation to provide comprehensive valuation analysis including:
+- Real-time option data fetching from Yahoo Finance
+- Black-Scholes theoretical pricing
+- Complete Greeks calculation (Delta, Gamma, Theta, Vega, Rho)
+- Advanced valuation rating system with confidence scoring
+- Market condition analysis and risk assessment
+
+Key Features:
+- Interactive input for symbol, expiration, strike, and option type
+- Real-time market data from yfinance API
+- Theoretical vs. market price comparison
+- Sophisticated valuation algorithm considering:
+  * Moneyness (distance from ATM)
+  * Time decay effects
+  * Volatility environment
+  * Bid-ask spread liquidity
+  * Market confidence factors
+- Risk assessment and market condition warnings
+- Professional-grade output formatting
+
+Usage:
+    python option_info_manual_with_valuation.py
+    # Enter: ticker symbol (e.g., AAPL)
+    # Enter: expiration date (YYYY-MM-DD)
+    # Enter: strike price
+    # Enter: option type (call/put)
+
+Output:
+- Comprehensive option analysis with all Greeks
+- Theoretical vs. market price comparison
+- Valuation rating (undervalued/overvalued/fair)
+- Confidence level assessment
+- Market insights and risk warnings
+
+Dependencies:
+- yfinance: For real-time US options data
+- utils: For Black-Scholes calculations and valuation
+- datetime: For date handling and time calculations
+
+This is the enhanced version of option_info_manual.py, adding sophisticated
+valuation capabilities beyond basic Greeks calculation.
+
+Author: NSE Options Analysis Project
+License: See LICENSE file
+"""
+
 import yfinance as yf
 from utils import black_scholes_greeks, black_scholes_price, option_valuation
 from datetime import datetime
