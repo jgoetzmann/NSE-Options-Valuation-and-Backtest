@@ -1,0 +1,49 @@
+LEGACY TESTERS - DEPRECATED FILES
+================================
+
+⚠️  WARNING: These files are LEGACY and may be DEPRECATED ⚠️
+
+IMPORTANT INFORMATION:
+======================
+
+1. **DEPRECATION STATUS**: These test files may contain outdated code, 
+   deprecated functions, or may not work with the current version of the 
+   NSE scraper and related modules.
+
+2. **PROPER LOCATION**: If you need to use any of these test files, 
+   they should be moved to the main `testers/` folder before running.
+
+3. **MOVING FILES**: 
+   - Copy the file you want to test from `previous_work/legacy_testers/`
+   - Paste it into the main `testers/` folder
+   - Then run it from there
+
+4. **WHY THEY'RE LEGACY**: 
+   - These files were created during development and testing
+   - They may reference old function names or deprecated features
+   - The current working testers are in the main `testers/` folder
+
+5. **RECOMMENDED APPROACH**:
+   - Use the current testers in the main `testers/` folder instead
+   - These legacy files are kept for reference and historical purposes
+   - If you need specific functionality, check the current testers first
+
+6. **CURRENT WORKING TESTERS** (in main `testers/` folder):
+   - test_nse_scraper.py - Basic NSE scraper functionality
+   - final_comprehensive_test.py - Complete end-to-end testing
+   - test_best_nse_options_of_day.py - Best options testing
+   - analyze_nse_data.py - Data analysis utilities
+
+7. **IF YOU MUST USE LEGACY FILES**:
+   - Move them to the main `testers/` folder first
+   - Test with small datasets
+   - Check for import errors or deprecated function calls
+   - Update any outdated code before using in production
+
+8. **SUPPORT**: Legacy files are not actively maintained or supported.
+   For issues, use the current testers in the main `testers/` folder.
+
+================================
+Last Updated: August 2025
+Status: LEGACY/DEPRECATED
+================================ 
