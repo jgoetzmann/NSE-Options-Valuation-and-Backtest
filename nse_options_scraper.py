@@ -12,6 +12,7 @@ Notes:
 
 import argparse
 import json
+import os
 import time
 from datetime import datetime
 from typing import Dict, Any, List, Literal, Optional
@@ -138,20 +139,26 @@ def main():
     ap.add_argument("--symbol", "-s", default="NIFTY", help="Symbol (e.g., NIFTY, BANKNIFTY, RELIANCE)")
     ap.add_argument("--kind", "-k", choices=["indices", "equities"], default="indices",
                     help="Use 'indices' for NIFTY/BANKNIFTY/FINNIFTY etc., 'equities' for stocks")
-    ap.add_argument("--outdir", "-o", default=".", help="Output directory")
+    ap.add_argument("--outdir", "-o", default="outputs/json", help="Output directory (default: outputs/json)")
     ap.add_argument("--user-agent", "-u", default=None, help="Override User-Agent if needed")
     args = ap.parse_args()
 
+    # Create output directory if it doesn't exist
+    os.makedirs(args.outdir, exist_ok=True)
+
+    # Generate timestamp for filename
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
     scraper = NSEOptionChainScraper(user_agent=args.user_agent)
     raw = scraper.fetch_option_chain(args.symbol, kind=args.kind)
 
-    raw_path = f"{args.outdir.rstrip('/')}/raw_option_chain_{args.symbol.upper()}.json"
+    raw_path = f"{args.outdir.rstrip('/')}/raw_option_chain_{args.symbol.upper()}_{timestamp}.json"
     with open(raw_path, "w", encoding="utf-8") as f:
         json.dump(raw, f, ensure_ascii=False, indent=2)
     print(f"Wrote raw JSON -> {raw_path}")
 
     slim = scraper.normalize(raw, symbol=args.symbol, kind=args.kind)
-    slim_path = f"{args.outdir.rstrip('/')}/option_chain_slim_{args.symbol.upper()}.json"
+    slim_path = f"{args.outdir.rstrip('/')}/option_chain_slim_{args.symbol.upper()}_{timestamp}.json"
     with open(slim_path, "w", encoding="utf-8") as f:
         json.dump(slim, f, ensure_ascii=False, indent=2)
     print(f"Wrote normalized JSON -> {slim_path}")
