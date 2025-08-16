@@ -216,7 +216,45 @@ def option_valuation(theoretical_price, market_price, S=None, K=None, T=None, si
     
     # Calculate confidence score (0-1, higher = more confident in valuation)
     # Confidence decreases as percentage difference approaches tolerance
-    confidence = 1 - sigmoid_score(pct_diff, dynamic_tolerance)
+    base_confidence = 1 - sigmoid_score(pct_diff, dynamic_tolerance)
+    
+    # Boost confidence based on data quality factors
+    data_quality_boost = 0.0
+    
+    # Higher confidence for options with good liquidity (tight spreads)
+    if bid and ask and ask > bid:
+        spread_pct = (ask - bid) / ((ask + bid) / 2)
+        if spread_pct < 0.05:  # Tight spread < 5%
+            data_quality_boost += 0.15
+        elif spread_pct < 0.10:  # Reasonable spread < 10%
+            data_quality_boost += 0.10
+        elif spread_pct < 0.20:  # Moderate spread < 20%
+            data_quality_boost += 0.05
+    
+    # Higher confidence for options with good volume
+    if 'totalTradedVolume' in locals() and totalTradedVolume:
+        if totalTradedVolume > 100:
+            data_quality_boost += 0.10
+        elif totalTradedVolume > 50:
+            data_quality_boost += 0.05
+    
+    # Higher confidence for options closer to ATM (more reliable pricing)
+    if S and K:
+        moneyness_ratio = abs(S - K) / S
+        if moneyness_ratio < 0.05:  # Very close to ATM
+            data_quality_boost += 0.10
+        elif moneyness_ratio < 0.10:  # Close to ATM
+            data_quality_boost += 0.05
+    
+    # Higher confidence for longer-dated options (less time decay noise)
+    if T:
+        if T > 0.5:  # More than 6 months
+            data_quality_boost += 0.05
+        elif T > 0.25:  # More than 3 months
+            data_quality_boost += 0.03
+    
+    # Apply the boost and cap at 1.0
+    confidence = min(base_confidence + data_quality_boost, 1.0)
     
     # Determine rating with confidence levels
     if pct_diff > dynamic_tolerance:

@@ -27,7 +27,7 @@ from typing import Dict, List, Any, Tuple
 import math
 
 # Import our utilities
-from utils import black_scholes_price, option_valuation
+from utils import black_scholes_price, option_valuation, simple_option_valuation
 
 
 class NSEOptionsValuationProcessor:
@@ -179,17 +179,23 @@ class NSEOptionsValuationProcessor:
             # Calculate theoretical price using Black-Scholes
             theoretical_price = black_scholes_price(S, K, T, self.risk_free_rate, sigma, option_type)
             
-            # Run enhanced valuation
-            rating, mispricing_pct, confidence = option_valuation(
+            # Run both valuation models
+            enhanced_rating, enhanced_mispricing_pct, enhanced_confidence = option_valuation(
                 theoretical_price, market_price, S, K, T, sigma, bid, ask, option_type
+            )
+            
+            simple_rating, simple_mispricing_pct = simple_option_valuation(
+                theoretical_price, market_price
             )
             
             return {
                 'valuation_status': 'success',
                 'theoretical_price': round(theoretical_price, 4),
-                'rating': rating,
-                'mispricing_pct': round(mispricing_pct * 100, 2),  # Convert to percentage
-                'confidence': round(confidence, 3),
+                'enhanced_rating': enhanced_rating,
+                'enhanced_mispricing_pct': round(enhanced_mispricing_pct * 100, 2),  # Convert to percentage
+                'enhanced_confidence': round(enhanced_confidence, 3),
+                'simple_rating': simple_rating,
+                'simple_mispricing_pct': round(simple_mispricing_pct * 100, 2),  # Convert to percentage
                 'error': None
             }
             
@@ -234,7 +240,8 @@ class NSEOptionsValuationProcessor:
         fieldnames = [
             'symbol', 'expiry', 'strike', 'optionType', 'lastPrice', 'underlyingValue',
             'impliedVolatility', 'openInterest', 'totalTradedVolume', 'bidPrice', 'askPrice',
-            'theoretical_price', 'rating', 'mispricing_pct', 'confidence', 'valuation_status', 'error'
+            'theoretical_price', 'enhanced_rating', 'enhanced_mispricing_pct', 'enhanced_confidence',
+            'simple_rating', 'simple_mispricing_pct', 'valuation_status', 'error'
         ]
         
         try:
@@ -264,24 +271,24 @@ class NSEOptionsValuationProcessor:
             # Filter successful valuations
             successful_options = [
                 opt for opt in processed_options 
-                if opt.get('valuation_status') == 'success' and opt.get('mispricing_pct') is not None
+                if opt.get('valuation_status') == 'success' and opt.get('enhanced_mispricing_pct') is not None
             ]
             
             # Filter out extreme mispricing and focus on more liquid options
             reasonable_options = [
                 opt for opt in successful_options 
-                if (abs(opt.get('mispricing_pct', 0)) < 500 and  # Filter out >500% mispricing
+                if (abs(opt.get('enhanced_mispricing_pct', 0)) < 500 and  # Filter out >500% mispricing
                     opt.get('openInterest', 0) > 0 and  # Has open interest
                     opt.get('totalTradedVolume', 0) > 0)  # Has some trading volume
             ]
             
             # Sort by mispricing percentage (most undervalued first, then most overvalued)
-            undervalued = [opt for opt in reasonable_options if opt.get('mispricing_pct', 0) > 0]
-            overvalued = [opt for opt in reasonable_options if opt.get('mispricing_pct', 0) < 0]
+            undervalued = [opt for opt in reasonable_options if opt.get('enhanced_mispricing_pct', 0) > 0]
+            overvalued = [opt for opt in reasonable_options if opt.get('enhanced_mispricing_pct', 0) < 0]
             
             # Sort by absolute mispricing percentage
-            undervalued.sort(key=lambda x: abs(x.get('mispricing_pct', 0)), reverse=True)
-            overvalued.sort(key=lambda x: abs(x.get('mispricing_pct', 0)), reverse=True)
+            undervalued.sort(key=lambda x: abs(x.get('enhanced_mispricing_pct', 0)), reverse=True)
+            overvalued.sort(key=lambda x: abs(x.get('enhanced_mispricing_pct', 0)), reverse=True)
             
             # Take top 10 from each category
             top_undervalued = undervalued[:10]
@@ -305,8 +312,8 @@ class NSEOptionsValuationProcessor:
                 summary_lines.append(
                     f"{i:2d}. {opt['optionType']} {opt['strike']} {opt['expiry']} | "
                     f"Market: ₹{opt['lastPrice']} | Fair: ₹{opt['theoretical_price']} | "
-                    f"Undervalued: {opt['mispricing_pct']:+.2f}% | "
-                    f"Confidence: {opt['confidence']:.1%}"
+                    f"Enhanced: {opt['enhanced_mispricing_pct']:+.2f}% (Conf: {opt['enhanced_confidence']:.1%}) | "
+                    f"Simple: {opt['simple_mispricing_pct']:+.2f}%"
                 )
             
             summary_lines.extend([
@@ -319,22 +326,52 @@ class NSEOptionsValuationProcessor:
                 summary_lines.append(
                     f"{i:2d}. {opt['optionType']} {opt['strike']} {opt['expiry']} | "
                     f"Market: ₹{opt['lastPrice']} | Fair: ₹{opt['theoretical_price']} | "
-                    f"Overvalued: {opt['mispricing_pct']:+.2f}% | "
-                    f"Confidence: {opt['confidence']:.1%}"
+                    f"Enhanced: {opt['enhanced_mispricing_pct']:+.2f}% (Conf: {opt['enhanced_confidence']:.1%}) | "
+                    f"Simple: {opt['simple_mispricing_pct']:+.2f}%"
                 )
             
             summary_lines.extend([
                 "",
                 "=" * 80,
                 "",
-                "Valuation Methodology:",
-                "- Uses Black-Scholes model for theoretical pricing",
-                "- Considers moneyness, time decay, volatility, and liquidity factors",
-                "- Risk-free rate: 6% annual",
-                "- Confidence score indicates reliability of valuation",
+                "VALUATION METHODOLOGY:",
+                "",
+                "1. THEORETICAL PRICING (Black-Scholes Model):",
+                "   - Calculates fair value using Black-Scholes formula for European options",
+                "   - Inputs: Spot price, Strike price, Time to expiry, Risk-free rate (6%), Implied volatility",
+                "   - Handles both calls and puts with proper mathematical implementation",
+                "",
+                "2. ENHANCED VALUATION MODEL (Advanced):",
+                "   - Multi-factor scoring system beyond simple percentage difference",
+                "   - Moneyness Factor: Higher tolerance for OTM options (more uncertainty)",
+                "   - Time Decay Factor: Higher tolerance for near-expiry options",
+                "   - Volatility Factor: Higher tolerance in high-volatility environments",
+                "   - Liquidity Factor: Higher tolerance for wide bid-ask spreads",
+                "   - Confidence Score: Indicates reliability based on data quality factors",
+                "   - Rating Categories: strongly undervalued → strongly overvalued",
+                "",
+                "3. SIMPLE VALUATION MODEL (Basic):",
+                "   - Traditional percentage-based approach",
+                "   - Compares theoretical vs. market price directly",
+                "   - Uses 5% tolerance threshold for over/under valuation",
+                "   - Rating Categories: undervalued, fairly priced, overvalued",
+                "",
+                "4. CONFIDENCE SCORING (Enhanced Model Only):",
+                "   - Base confidence from sigmoid function around tolerance levels",
+                "   - Data quality boost for tight bid-ask spreads (< 5% = +15%, < 10% = +10%)",
+                "   - Volume boost for actively traded options (> 100 contracts = +10%)",
+                "   - Moneyness boost for ATM options (closer to spot = higher confidence)",
+                "   - Time boost for longer-dated options (less time decay noise)",
+                "",
+                "5. DATA QUALITY FILTERS:",
+                "   - Focuses on liquid options with open interest and trading volume",
+                "   - Filters out extreme mispricing (>500%) likely due to data errors",
+                "   - Uses bid-ask mid-price when last price is unavailable",
+                "   - Applies reasonable default volatility when implied vol is missing",
                 "",
                 "Note: This analysis is for educational purposes only.",
-                "Always conduct your own research before making investment decisions."
+                "Always conduct your own research before making investment decisions.",
+                "The enhanced model provides more nuanced analysis but requires quality market data."
             ])
             
             # Write summary to file
