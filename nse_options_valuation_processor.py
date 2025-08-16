@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """
-NSE Options Valuation Processor
-==============================
+NSE Options Valuation Processor - Complete Analysis Pipeline
+==========================================================
 
-This script processes NSE options data through valuation analysis:
-1. Calls nse_options_scraper to get fresh data
-2. Loads the slim JSON output
-3. Runs valuation analysis for each option using utils.py
-4. Saves detailed results to CSV
-5. Creates summary report with top over/under valued options
-6. Saves summary to TXT file
+This is the flagship script that provides end-to-end NSE options analysis:
+1. Calls nse_options_scraper to get fresh data from NSE
+2. Loads the slim JSON output and processes all options
+3. Runs comprehensive valuation analysis using utils.py (both enhanced and simple models)
+4. Saves detailed results to CSV with timestamped filenames
+5. Creates summary reports with top over/under valued options
+6. Provides dual valuation models with confidence scoring
+7. Automatically organizes all outputs into timestamped folders
 
 Dependencies:
 - nse_options_scraper.py

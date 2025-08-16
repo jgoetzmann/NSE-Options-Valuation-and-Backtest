@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Basic US Options Analysis - Greeks Calculator
-============================================
+Manual US Options Info Lookup (Greeks Only)
+===========================================
 
 This script provides a simple interactive interface for calculating basic Greeks for individual US options.
 It's designed as a lightweight tool for quick option analysis using yfinance data.

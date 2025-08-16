@@ -5,7 +5,7 @@ Financial Utilities Module - Core Options Analysis Engine
 
 This module contains the core financial calculation engine for options analysis, providing
 professional-grade implementations of Black-Scholes pricing, Greeks calculation, and advanced
-valuation algorithms.
+valuation algorithms with confidence scoring.
 
 Core Functions:
 1. black_scholes_price(S, K, T, r, sigma, option_type)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Interactive US Options Analysis with Advanced Valuation
-====================================================
+Manual US Options Analysis with Advanced Valuation
+=================================================
 
 This script provides an interactive interface for analyzing individual US options using yfinance data.
 It goes beyond basic Greeks calculation to provide comprehensive valuation analysis including:

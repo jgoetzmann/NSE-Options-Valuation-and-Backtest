@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """
-NSE Option Chain scraper
+NSE Options Chain Scraper
+=========================
+
+This script scrapes NSE (National Stock Exchange of India) options data and provides:
 - Fetches option chain JSON for an index (default: NIFTY) or equity
-- Writes raw response to raw_option_chain_<symbol>.json
-- Normalizes to a tidy per-leg (CE/PE) list and writes option_chain_slim_<symbol>.json
+- Writes raw response to raw_option_chain_<symbol>_<timestamp>.json
+- Normalizes to a tidy per-leg (CE/PE) list and writes option_chain_slim_<symbol>_<timestamp>.json
+- All outputs are saved to outputs/json/ folder with timestamped filenames
 
 Notes:
 - Use reasonable rate limits; respect NSE terms.

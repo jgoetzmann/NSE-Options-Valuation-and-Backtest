@@ -14,7 +14,7 @@ A comprehensive toolkit for options analysis that combines Black–Scholes prici
 ### 🏗️ Project Architecture
 The project is built with a modular architecture:
 - **Core Engine** (`utils.py`): Black-Scholes calculations, Greeks, and advanced valuation
-- **Data Collection** (`nse_scraper.py`): NSE data scraping with robust error handling
+- **Data Collection** (`nse_options_scraper.py`): NSE data scraping with robust error handling
 - **Analysis Tools**: Multiple analysis scripts for different use cases
 - **Testing Framework**: Comprehensive test suites for validation and quality assurance
 - **Output Management**: Organized CSV and JSON output with timestamping
@@ -41,25 +41,19 @@ pip install pandas numpy scipy requests yfinance
 ```
 .
 ├─ LICENSE
+├─ .gitignore
 ├─ README.md
 ├─ utils.py                         # Black-Scholes pricing, Greeks, valuation utilities
 ├─ option_info_manual.py            # Manual US option lookup (Greeks)
-├─ option_info_manual_with_valuation.py  # Manual US option lookup + valuation
-├─ nse_scraper.py                   # NSE: fetch option-chain and process ALL options for a chosen date
-├─ valuation_from_csv.py            # Compute Greeks/theoretical price/valuation from CSV
-├─ testers/                         # Test and utility scripts (development)
-│  ├─ analyze_nse_data.py
-│  ├─ test_full_nse_processing.py
-│  ├─ test_single_date_processing.py
-│  ├─ test_nse_full_data.py
-│  ├─ test_nse_scraper.py
-│  └─ test_nse_scraper_enhanced.py
+├─ option_info_manual_Valuation_processor.py  # Manual US option lookup + valuation
+├─ nse_options_scraper.py           # NSE: fetch option-chain and process ALL options for a chosen date
+├─ nse_options_valuation_processor.py  # Complete NSE options analysis pipeline with valuation
 ├─ outputs/                         # Output folders (created)
-│  ├─ csv/
-│  └─ json/
-└─ previous_work/
+│  ├─ csv/                         # CSV outputs with timestamped filenames
+│  ├─ json/                        # JSON outputs with timestamped filenames
+│  └─ results_from_nse_valuations/ # Summary reports from NSE analysis
+└─ previous_work/                   # Legacy code and previous iterations (not critical to current functionality)
 ```
-Note: Some CSV/JSON test artifacts may currently reside in the project root. The `outputs/csv` and `outputs/json` folders exist and are intended for organizing outputs going forward.
 
 ---
 
@@ -90,14 +84,14 @@ You will be prompted for: ticker, expiration (YYYY-MM-DD), strike, and option ty
 ### 2) Manual US option info with valuation
 Interactive; prints Greeks, theoretical price, valuation rating, and confidence.
 ```bash
-python option_info_manual_with_valuation.py
+python option_info_manual_Valuation_processor.py
 ```
 Same inputs as above. Uses `utils.option_valuation` with additional context (S, K, T, sigma, bid/ask, option type).
 
 ### 3) NSE scraper (single date, ALL options)
 Fetches NSE option-chain JSON for a chosen index and processes ALL options for a single expiration date.
 ```bash
-python nse_scraper.py
+python nse_options_scraper.py
 ```
 - Choose a ticker (NIFTY, BANKNIFTY, FINNIFTY, MIDCPNIFTY, SENSEX)
 - The script shows available expiries; enter one exactly as listed (DD-MMM-YYYY)
@@ -107,40 +101,43 @@ Notes:
 - Includes retry logic, randomized delays, and graceful handling of rate limits.
 - If you encounter 401/429 responses, rerun later or use the test scripts with existing JSON files.
 
-### 4) Process valuation from a CSV
-Takes a CSV (e.g., from the NSE scraper), computes Greeks and theoretical prices, and applies valuation.
+### 4) Complete NSE Options Analysis Pipeline
+The flagship feature - automatically scrapes NSE data, runs comprehensive valuation analysis, and generates detailed reports.
 ```bash
-python valuation_from_csv.py
+python nse_options_valuation_processor.py
 ```
-Follow the prompt to provide the CSV path. Outputs top undervalued options in the console and saves a full results CSV.
 
----
+**What it does:**
+1. **Calls NSE Options Scraper** → Gets fresh data from NSE
+2. **Loads Slim JSON** → Processes the normalized options data
+3. **Runs Valuation Analysis** → Uses `utils.py` for Black-Scholes pricing and advanced valuation
+4. **Saves Detailed Results** → CSV in `outputs/csv/` with timestamped filenames
+5. **Creates Summary Report** → Top over/under valued options in `outputs/results_from_nse_valuations/`
+6. **Provides Dual Models** → Both enhanced and simple valuation approaches
 
-## Test and utility scripts (in `testers/`)
-These are provided to validate functionality non-interactively and to work with already saved datasets.
+**Output Files:**
+- **CSV**: `outputs/csv/nse_options_valuation_{SYMBOL}_{TIMESTAMP}.csv`
+  - Contains all options with valuation results from both models
+  - Includes theoretical prices, mispricing percentages, confidence scores
+- **Summary TXT**: `outputs/results_from_nse_valuations/nse_valuation_summary_{SYMBOL}_{TIMESTAMP}.txt`
+  - Top 10 undervalued options with both valuation models
+  - Top 10 overvalued options with both valuation models
+  - Comprehensive methodology explanation
 
-- `test_single_date_processing.py`
-  - Reads an existing raw JSON file and processes ALL options for a user-chosen expiration date
-- `test_full_nse_processing.py`
-  - Processes a large dataset from an existing raw JSON file; helpful for stress testing
-- `analyze_nse_data.py`
-  - Prints summary stats of a raw NSE JSON file (expiries, strikes, counts)
-- `test_nse_scraper.py`, `test_nse_scraper_enhanced.py`, `test_nse_full_data.py`
-  - Earlier test harnesses; superseded by the single-date processors above
-
-Run, for example:
-```bash
-python testers\test_single_date_processing.py
-```
+**Key Features:**
+- **Smart Data Handling**: Automatically handles missing implied volatility and market prices
+- **Option Type Conversion**: Converts CE/PE to call/put for Black-Scholes calculations
+- **Quality Filtering**: Focuses on liquid options with reasonable mispricing
+- **Confidence Boosting**: Multiple factors contribute to higher confidence scores
+- **Dual Model Comparison**: Both simple and sophisticated analysis options
 
 ---
 
 ## Outputs and organization
-- Raw JSON snapshots (NSE) and processed CSVs are currently saved in the project root.
-- Output folders exist for organizing artifacts:
-  - `outputs/json/` for JSON
-  - `outputs/csv/` for CSV
-- You may move existing artifacts into these folders. Future updates can direct scripts to write there by default.
+All outputs are automatically organized into timestamped folders:
+- `outputs/json/` - Raw and processed JSON files from NSE scraper
+- `outputs/csv/` - Detailed CSV analysis results
+- `outputs/results_from_nse_valuations/` - Summary reports and analysis
 
 ---
 
@@ -153,11 +150,11 @@ python testers\test_single_date_processing.py
 ---
 
 ## Roadmap / TODO
-- Direct all JSON/CSV outputs to `outputs/json` and `outputs/csv` respectively by default
-- Implement `option_info_auto_scan.py` for scanning a range of expirations/strikes via yfinance
-- Add CLI arguments to reduce interactive prompts and enable batch processing
-- Harden NSE fetching further (cookie persistence, rotating headers, or official data sources)
-- More unit tests for valuation logic and greeks
+- Add more symbols and indices support for NSE analysis
+- Implement portfolio-level analysis and backtesting capabilities
+- Add more sophisticated volatility surface modeling
+- Enhance confidence scoring with additional market factors
+- Add web interface for easier data visualization
 
 ---
 
