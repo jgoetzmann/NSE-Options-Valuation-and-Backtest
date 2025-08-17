@@ -129,6 +129,16 @@ def main():
         print("   3. Use the model scores to make trading decisions")
         print("   4. Retrain models periodically with new historical data")
         
+        # Generate enhanced results automatically
+        print("\n📊 GENERATING ENHANCED RESULTS...")
+        try:
+            from generate_mode_results import EnhancedModeResultsGenerator
+            generator = EnhancedModeResultsGenerator()
+            mode_b_report = generator.generate_mode_b_results()
+            print(f"✅ Enhanced results generated: {os.path.basename(mode_b_report)}")
+        except Exception as e:
+            print(f"⚠️  Could not generate enhanced results: {e}")
+        
     except Exception as e:
         print(f"\n❌ ERROR during scoring: {str(e)}")
         print("\n🔧 TROUBLESHOOTING:")

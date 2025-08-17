@@ -39,7 +39,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from data_pipeline.normalize_snapshot import SnapshotNormalizer
 from data_pipeline.attach_underlier_features import UnderlierFeatureAttacher
 from data_pipeline.compute_iv_and_greeks import IVAndGreeksComputer
-from schemas import (
+from data_pipeline.schemas import (
     NORMALIZED_TABLE_SCHEMA, 
     PANDAS_DTYPES,
     validate_dataframe_schema

@@ -132,6 +132,16 @@ def main():
             print(f"   Valid Contracts: {quality.get('valid_contracts', 'N/A')}")
             print(f"   Data Coverage: {quality.get('data_coverage', 'N/A'):.1%}")
         
+        # Generate enhanced results automatically
+        print("\n📊 GENERATING ENHANCED RESULTS...")
+        try:
+            from generate_mode_results import EnhancedModeResultsGenerator
+            generator = EnhancedModeResultsGenerator()
+            mode_c_report = generator.generate_mode_c_results()
+            print(f"✅ Enhanced results generated: {os.path.basename(mode_c_report)}")
+        except Exception as e:
+            print(f"⚠️  Could not generate enhanced results: {e}")
+        
     except Exception as e:
         print(f"\n❌ ERROR running Mode C: {str(e)}")
         print("\n🔧 TROUBLESHOOTING:")

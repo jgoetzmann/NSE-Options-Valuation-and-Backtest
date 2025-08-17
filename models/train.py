@@ -44,7 +44,7 @@ import lightgbm as lgb
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from schemas import (
+from data_pipeline.schemas import (
     NORMALIZED_TABLE_SCHEMA, 
     PANDAS_DTYPES,
     validate_dataframe_schema
@@ -89,7 +89,7 @@ class MLModelTrainer:
         self.output_dir = "outputs"
         Path(self.output_dir).mkdir(parents=True, exist_ok=True)
         
-        logger.info(f"Initialized MLModelTrainer for {self.config.symbol}")
+        logger.info(f"Initialized MLModelTrainer for {self.config.get('symbol', 'NIFTY')}")
     
     def _load_config(self) -> Dict[str, Any]:
         """Load and parse ML experiment configuration."""

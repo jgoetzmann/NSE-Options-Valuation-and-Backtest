@@ -82,6 +82,16 @@ def main():
         print("   3. Examine plots for visual analysis")
         print("   4. Try different horizons or filters in configs/backtest_synth.yml")
         
+        # Generate enhanced results automatically
+        print("\n📊 GENERATING ENHANCED RESULTS...")
+        try:
+            from generate_mode_results import EnhancedModeResultsGenerator
+            generator = EnhancedModeResultsGenerator()
+            mode_a_report = generator.generate_mode_a_results()
+            print(f"✅ Enhanced results generated: {os.path.basename(mode_a_report)}")
+        except Exception as e:
+            print(f"⚠️  Could not generate enhanced results: {e}")
+        
     except Exception as e:
         print(f"\n❌ ERROR running Mode A: {str(e)}")
         print("\n🔧 TROUBLESHOOTING:")
