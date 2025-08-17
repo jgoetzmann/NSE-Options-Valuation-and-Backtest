@@ -1,0 +1,74 @@
+NSE Options Valuation Summary - NIFTY
+Generated on: 2025-08-16 18:26:02
+Total options analyzed: 1302
+Successful valuations: 1294
+Failed valuations: 8
+
+================================================================================
+
+TOP UNDERVALUED OPTIONS (Top 10):
+--------------------------------------------------
+ 1. PE 24650 14-Aug-2025 | Market: ₹18.65 | Fair: ₹71.1594 | Enhanced: +281.55% (Conf: 25.0%) | Simple: +281.55%
+ 2. PE 20000 29-Dec-2026 | Market: ₹135.05 | Fair: ₹232.7883 | Enhanced: +72.37% (Conf: 11.3%) | Simple: +72.37%
+ 3. CE 26000 29-Dec-2026 | Market: ₹1906 | Fair: ₹3173.3813 | Enhanced: +66.49% (Conf: 26.4%) | Simple: +66.49%
+ 4. PE 21000 29-Dec-2026 | Market: ₹234 | Fair: ₹384.4545 | Enhanced: +64.30% (Conf: 8.3%) | Simple: +64.30%
+ 5. PE 22000 29-Dec-2026 | Market: ₹320 | Fair: ₹521.2184 | Enhanced: +62.88% (Conf: 13.0%) | Simple: +62.88%
+ 6. PE 23000 29-Dec-2026 | Market: ₹450 | Fair: ₹718.3094 | Enhanced: +59.62% (Conf: 27.4%) | Simple: +59.62%
+ 7. PE 24000 29-Dec-2026 | Market: ₹668.95 | Fair: ₹1028.0753 | Enhanced: +53.68% (Conf: 34.3%) | Simple: +53.68%
+ 8. PE 23000 30-Jun-2026 | Market: ₹316.45 | Fair: ₹473.9708 | Enhanced: +49.78% (Conf: 25.1%) | Simple: +49.78%
+ 9. PE 21000 30-Jun-2026 | Market: ₹161 | Fair: ₹240.8081 | Enhanced: +49.57% (Conf: 21.7%) | Simple: +49.57%
+10. PE 25000 29-Dec-2026 | Market: ₹928.85 | Fair: ₹1385.8706 | Enhanced: +49.20% (Conf: 36.0%) | Simple: +49.20%
+
+TOP OVERVALUED OPTIONS (Top 10):
+--------------------------------------------------
+ 1. PE 22600 14-Aug-2025 | Market: ₹0.05 | Fair: ₹0.0 | Enhanced: -100.00% (Conf: 5.4%) | Simple: -100.00%
+ 2. PE 22650 14-Aug-2025 | Market: ₹0.05 | Fair: ₹0.0 | Enhanced: -100.00% (Conf: 5.3%) | Simple: -100.00%
+ 3. PE 22700 14-Aug-2025 | Market: ₹0.1 | Fair: ₹0.0 | Enhanced: -100.00% (Conf: 5.4%) | Simple: -100.00%
+ 4. PE 22750 14-Aug-2025 | Market: ₹0.05 | Fair: ₹0.0 | Enhanced: -100.00% (Conf: 5.3%) | Simple: -100.00%
+ 5. PE 22800 14-Aug-2025 | Market: ₹0.05 | Fair: ₹0.0 | Enhanced: -100.00% (Conf: 5.3%) | Simple: -100.00%
+ 6. PE 22850 14-Aug-2025 | Market: ₹0.05 | Fair: ₹0.0 | Enhanced: -100.00% (Conf: 5.3%) | Simple: -100.00%
+ 7. PE 22900 14-Aug-2025 | Market: ₹0.05 | Fair: ₹0.0 | Enhanced: -100.00% (Conf: 5.3%) | Simple: -100.00%
+ 8. PE 22950 14-Aug-2025 | Market: ₹0.05 | Fair: ₹0.0 | Enhanced: -100.00% (Conf: 5.3%) | Simple: -100.00%
+ 9. PE 23000 14-Aug-2025 | Market: ₹0.05 | Fair: ₹0.0 | Enhanced: -100.00% (Conf: 5.3%) | Simple: -100.00%
+10. PE 23050 14-Aug-2025 | Market: ₹0.05 | Fair: ₹0.0 | Enhanced: -100.00% (Conf: 5.3%) | Simple: -100.00%
+
+================================================================================
+
+VALUATION METHODOLOGY:
+
+1. THEORETICAL PRICING (Black-Scholes Model):
+   - Calculates fair value using Black-Scholes formula for European options
+   - Inputs: Spot price, Strike price, Time to expiry, Risk-free rate (6%), Implied volatility
+   - Handles both calls and puts with proper mathematical implementation
+
+2. ENHANCED VALUATION MODEL (Advanced):
+   - Multi-factor scoring system beyond simple percentage difference
+   - Moneyness Factor: Higher tolerance for OTM options (more uncertainty)
+   - Time Decay Factor: Higher tolerance for near-expiry options
+   - Volatility Factor: Higher tolerance in high-volatility environments
+   - Liquidity Factor: Higher tolerance for wide bid-ask spreads
+   - Confidence Score: Indicates reliability based on data quality factors
+   - Rating Categories: strongly undervalued → strongly overvalued
+
+3. SIMPLE VALUATION MODEL (Basic):
+   - Traditional percentage-based approach
+   - Compares theoretical vs. market price directly
+   - Uses 5% tolerance threshold for over/under valuation
+   - Rating Categories: undervalued, fairly priced, overvalued
+
+4. CONFIDENCE SCORING (Enhanced Model Only):
+   - Base confidence from sigmoid function around tolerance levels
+   - Data quality boost for tight bid-ask spreads (< 5% = +15%, < 10% = +10%)
+   - Volume boost for actively traded options (> 100 contracts = +10%)
+   - Moneyness boost for ATM options (closer to spot = higher confidence)
+   - Time boost for longer-dated options (less time decay noise)
+
+5. DATA QUALITY FILTERS:
+   - Focuses on liquid options with open interest and trading volume
+   - Filters out extreme mispricing (>500%) likely due to data errors
+   - Uses bid-ask mid-price when last price is unavailable
+   - Applies reasonable default volatility when implied vol is missing
+
+Note: This analysis is for educational purposes only.
+Always conduct your own research before making investment decisions.
+The enhanced model provides more nuanced analysis but requires quality market data.
