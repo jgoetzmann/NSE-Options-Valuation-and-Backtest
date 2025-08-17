@@ -1,0 +1,131 @@
+# Configuration for Mode C - True EOD Backtest via Reconstructed Past Chains (EOD-True)
+# This mode creates historically accurate, labeled datasets by reconstructing
+# per-day option chains using official historical derivatives data
+
+symbol: "NIFTY"
+synthetic_flag: false
+
+# Date span for historical reconstruction
+date_span:
+  start: "2022-01-01"            # Start date for data reconstruction
+  end: "2024-12-31"              # End date for data reconstruction
+  exclude_holidays: true          # Exclude trading holidays
+  exclude_weekends: true          # Exclude weekends
+
+# Analysis horizons (days before expiry for entry simulation)
+horizons: [3, 7, 30]
+
+# Data quality filters
+filters:
+  min_oi: 500                    # Minimum open interest
+  min_premium: 2.0               # Minimum premium in rupees
+  max_spread_pct: 0.08           # Maximum bid-ask spread percentage
+  ttm_bounds:                     # Time to maturity bounds
+    min: 2                        # Minimum days to expiry
+    max: 365                      # Maximum days to expiry
+  min_volume: 100                 # Minimum trading volume
+  max_iv: 2.0                     # Maximum implied volatility (200%)
+  min_contracts_per_expiry: 10   # Minimum contracts per expiry date
+  max_strike_range: 0.5           # Maximum strike range as fraction of spot
+
+# Transaction costs
+costs:
+  round_turn_bps: 60             # Round-trip transaction costs in basis points
+  slippage_mode: "half_spread"   # Slippage model: "half_spread", "fixed_bps", or "none"
+  fixed_slippage_bps: 10         # Fixed slippage in basis points (if applicable)
+  market_impact_bps: 5            # Market impact in basis points
+  clearing_fees: 0.05             # Clearing fees per contract
+
+# Portfolio construction
+portfolio:
+  daily_max_positions: 20        # Maximum positions per day
+  rank_score: "pct_diff_times_confidence"  # Ranking formula
+  position_sizing: "equal_weight" # Position sizing: "equal_weight", "volatility_weight", "confidence_weight"
+  max_portfolio_weight: 0.05     # Maximum weight per position
+  rebalance_frequency: "daily"   # Portfolio rebalancing frequency
+
+# Data reconstruction settings
+reconstruction:
+  data_source: "bhavcopy"        # Data source: "bhavcopy", "nse_historical", "custom"
+  bhavcopy_dir: "data/bhavcopy"  # Directory for bhavcopy files
+  cache_reconstructed: true       # Cache reconstructed data
+  compression: "parquet"          # Compression format: "parquet", "csv", "hdf5"
+  parallel_processing: true       # Enable parallel processing
+  batch_size: 1000               # Batch size for processing
+
+# Feature engineering
+features:
+  include_interactions: true      # Include interaction features
+  include_regime_indicators: true # Include market regime indicators
+  volatility_lookback: 20        # Days for volatility calculation
+  return_lookback: 60            # Days for return calculation
+  include_vix: true              # Include VIX data if available
+  include_sector_rotation: false # Include sector rotation indicators
+
+# Risk management
+risk:
+  max_drawdown: 0.20             # Maximum drawdown threshold
+  stop_loss_pct: 0.50            # Stop loss percentage
+  take_profit_pct: 1.00          # Take profit percentage
+  max_correlation: 0.70          # Maximum correlation between positions
+  var_confidence: 0.95           # Value at Risk confidence level
+  max_leverage: 1.0              # Maximum leverage
+
+# Output and reporting
+output:
+  save_intermediate: true         # Save intermediate processing steps
+  generate_plots: true            # Generate performance plots
+  detailed_logging: true          # Enable detailed logging
+  output_dir: "outputs/results_from_nse_valuations"
+  save_reconstructed_data: true   # Save reconstructed option chains
+  parquet_dir: "reconstructed/parquet"  # Directory for parquet files
+  json_dir: "reconstructed/json"        # Directory for JSON files
+
+# Validation settings
+validation:
+  cross_validate: true            # Enable cross-validation
+  test_size: 0.2                 # Test set size for validation
+  random_state: 42               # Random seed for reproducibility
+  n_splits: 5                    # Number of CV splits
+  walk_forward: true             # Use walk-forward validation
+  embargo_days: 5                # Embargo period in days
+
+# Performance metrics
+metrics:
+  include_rank_ic: true          # Include rank information coefficient
+  include_sharpe: true           # Include Sharpe ratio
+  include_sortino: true          # Include Sortino ratio
+  include_max_drawdown: true     # Include maximum drawdown
+  include_win_rate: true         # Include win rate
+  include_profit_factor: true    # Include profit factor
+  include_calmar: true           # Include Calmar ratio
+  include_omega: true            # Include Omega ratio
+  stress_costs: [0.75, 1.25]    # Cost stress testing factors
+  include_regime_analysis: true  # Include regime-dependent analysis
+
+# Data quality checks
+quality:
+  validate_contract_counts: true # Validate contract counts against official data
+  check_price_consistency: true  # Check for price consistency
+  validate_expiry_dates: true    # Validate expiry date logic
+  check_underlier_alignment: true # Check underlier price alignment
+  max_price_deviation: 0.10     # Maximum allowed price deviation
+  min_data_completeness: 0.95   # Minimum data completeness threshold
+
+# Machine learning preparation
+ml_prep:
+  prepare_features: true          # Prepare features for ML training
+  create_interaction_features: true # Create interaction features
+  normalize_features: true        # Normalize features
+  handle_missing_values: true     # Handle missing values
+  feature_selection: true         # Perform feature selection
+  save_ml_dataset: true          # Save dataset for ML training
+
+# Backtesting methodology
+methodology:
+  entry_timing: "eod"            # Entry timing: "eod", "next_open", "intraday"
+  exit_timing: "expiry"          # Exit timing: "expiry", "intraday", "stop_loss"
+  include_early_exit: false      # Include early exit strategies
+  include_hedging: false         # Include delta hedging
+  include_rollover: false        # Include position rollover
+  realistic_execution: true      # Use realistic execution assumptions

@@ -1,0 +1,87 @@
+# Configuration for Mode A - Synthetic Backtest on Current Snapshot (SB-CS)
+# This mode validates end-to-end plumbing and explores feature importance
+# without requiring historical data reconstruction
+
+symbol: "NIFTY"
+snapshot_ts: "2025-08-16T10:00:00Z"  # Timestamp of snapshot to analyze
+synthetic_flag: true
+
+# Analysis horizons (days before expiry for synthetic entry)
+horizons: [3, 7, 30]
+
+# Data quality filters
+filters:
+  min_oi: 500                    # Minimum open interest
+  min_premium: 2.0               # Minimum premium in rupees
+  max_spread_pct: 0.08           # Maximum bid-ask spread percentage
+  ttm_bounds:                     # Time to maturity bounds
+    min: 2                        # Minimum days to expiry
+    max: 365                      # Maximum days to expiry
+  min_volume: 100                 # Minimum trading volume
+  max_iv: 2.0                     # Maximum implied volatility (200%)
+
+# Transaction costs
+costs:
+  round_turn_bps: 60             # Round-trip transaction costs in basis points
+  slippage_mode: "half_spread"   # Slippage model: "half_spread", "fixed_bps", or "none"
+  fixed_slippage_bps: 10         # Fixed slippage in basis points (if applicable)
+
+# Portfolio construction
+portfolio:
+  daily_max_positions: 20        # Maximum positions per day
+  rank_score: "pct_diff_times_confidence"  # Ranking formula
+  position_sizing: "equal_weight" # Position sizing: "equal_weight", "volatility_weight", "confidence_weight"
+  max_portfolio_weight: 0.05     # Maximum weight per position
+
+# Feature engineering
+features:
+  include_interactions: true      # Include interaction features
+  include_regime_indicators: true # Include market regime indicators
+  volatility_lookback: 20        # Days for volatility calculation
+  return_lookback: 60            # Days for return calculation
+
+# Risk management
+risk:
+  max_drawdown: 0.20             # Maximum drawdown threshold
+  stop_loss_pct: 0.50            # Stop loss percentage
+  take_profit_pct: 1.00          # Take profit percentage
+  max_correlation: 0.70          # Maximum correlation between positions
+
+# Output and reporting
+output:
+  save_intermediate: true         # Save intermediate processing steps
+  generate_plots: true            # Generate performance plots
+  detailed_logging: true          # Enable detailed logging
+  output_dir: "outputs/results_from_nse_valuations"
+
+# Validation settings
+validation:
+  cross_validate: true            # Enable cross-validation
+  test_size: 0.2                 # Test set size for validation
+  random_state: 42               # Random seed for reproducibility
+  n_splits: 5                    # Number of CV splits
+
+# Performance metrics
+metrics:
+  include_rank_ic: true          # Include rank information coefficient
+  include_sharpe: true           # Include Sharpe ratio
+  include_sortino: true          # Include Sortino ratio
+  include_max_drawdown: true     # Include maximum drawdown
+  include_win_rate: true         # Include win rate
+  include_profit_factor: true    # Include profit factor
+  stress_costs: [0.75, 1.25]    # Cost stress testing factors
+
+# Machine learning integration (optional for Mode A)
+ml:
+  enable_ml_scoring: false       # Enable ML model scoring
+  model_path: null               # Path to trained ML model
+  feature_importance: true       # Calculate feature importance
+  confidence_threshold: 0.6      # Minimum confidence for ML predictions
+
+# Synthetic backtest specific settings
+synthetic:
+  use_historical_volatility: true # Use historical volatility for feature calculation
+  simulate_market_impact: false   # Simulate market impact of trades
+  realistic_slippage: true        # Apply realistic slippage model
+  include_holidays: true          # Account for trading holidays
+  timezone: "Asia/Kolkata"        # Trading timezone
