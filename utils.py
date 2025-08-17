@@ -231,13 +231,6 @@ def option_valuation(theoretical_price, market_price, S=None, K=None, T=None, si
         elif spread_pct < 0.20:  # Moderate spread < 20%
             data_quality_boost += 0.05
     
-    # Higher confidence for options with good volume
-    if 'totalTradedVolume' in locals() and totalTradedVolume:
-        if totalTradedVolume > 100:
-            data_quality_boost += 0.10
-        elif totalTradedVolume > 50:
-            data_quality_boost += 0.05
-    
     # Higher confidence for options closer to ATM (more reliable pricing)
     if S and K:
         moneyness_ratio = abs(S - K) / S
