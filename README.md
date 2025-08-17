@@ -52,7 +52,7 @@ pip install pandas numpy scipy requests yfinance
 │  ├─ csv/                         # CSV outputs with timestamped filenames
 │  ├─ json/                        # JSON outputs with timestamped filenames
 │  └─ results_from_nse_valuations/ # Summary reports from NSE analysis
-└─ previous_work/                   # Legacy code and previous iterations (not critical to current functionality)
+└─ previous_work/                   # Legacy code and previous iterations
 ```
 
 ---
