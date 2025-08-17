@@ -36,7 +36,7 @@ from tqdm import tqdm
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from schemas import (
+from data_pipeline.schemas import (
     NORMALIZED_TABLE_SCHEMA, 
     PANDAS_DTYPES,
     validate_dataframe_schema,
@@ -245,7 +245,7 @@ class TrueBacktestRunner:
         if df.empty:
             return pd.Series(dtype=float)
         
-        rank_score = self.config.portfolio.rank_score
+        rank_score = self.config.portfolio.get('rank_score', 'pct_diff_times_confidence') if self.config.portfolio else 'pct_diff_times_confidence'
         
         if rank_score == "pct_diff_times_confidence":
             # Use percentage difference from theoretical value times confidence
@@ -297,7 +297,7 @@ class TrueBacktestRunner:
         df = df.sort_values('ranking_score', ascending=False).reset_index(drop=True)
         
         # Apply position limits
-        max_positions = getattr(self.config.portfolio, 'daily_max_positions', 20)
+        max_positions = self.config.portfolio.get('daily_max_positions', 20) if self.config.portfolio else 20
         if len(df) > max_positions:
             df = df.head(max_positions).copy()
             logger.info(f"Limited portfolio to {max_positions} positions")
@@ -307,8 +307,8 @@ class TrueBacktestRunner:
         df['position_rank'] = range(1, len(df) + 1)
         
         # Apply position sizing if configured
-        if hasattr(self.config.portfolio, 'position_sizing'):
-            sizing_config = self.config.portfolio.position_sizing
+        if self.config.portfolio and 'position_sizing' in self.config.portfolio:
+            sizing_config = self.config.portfolio['position_sizing']
             if sizing_config == "equal_weight":
                 df['position_weight'] = 1.0 / len(df)
             elif sizing_config == "rank_weight":

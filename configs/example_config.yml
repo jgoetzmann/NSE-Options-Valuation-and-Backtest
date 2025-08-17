@@ -1,0 +1,163 @@
+# Example Configuration File
+# Copy this file and modify it for your specific needs
+# 
+# Usage:
+# 1. Copy this file: cp example_config.yml my_config.yml
+# 2. Modify the settings below
+# 3. Update your run scripts to use: config_path="configs/my_config.yml"
+
+# Basic Settings
+symbol: "NIFTY"                    # Index to analyze (NIFTY, BANKNIFTY, FINNIFTY)
+analysis_date: "2025-08-16"        # Date for analysis (YYYY-MM-DD format)
+
+# Mode A: Synthetic Backtest Settings
+synthetic:
+  horizons: [3, 7, 30]            # Analysis timeframes in days
+  max_positions: 20                # Maximum positions to analyze
+  
+  # Data Quality Filters
+  filters:
+    min_oi: 500                    # Minimum open interest
+    min_premium: 2.0               # Minimum premium in rupees
+    max_spread_pct: 0.08           # Maximum bid-ask spread percentage
+    min_volume: 100                # Minimum trading volume
+    max_iv: 2.0                    # Maximum implied volatility (200%)
+    
+    # Time to maturity bounds
+    ttm_bounds:
+      min: 2                        # Minimum days to expiry
+      max: 365                      # Maximum days to expiry
+
+# Mode B: Machine Learning Settings
+ml:
+  # Training Period
+  training:
+    start_date: "2022-01-01"       # Training data start date
+    end_date: "2024-06-30"         # Training data end date
+    validation_split: 0.2           # Validation set size (20%)
+    
+  # Features to use
+  features:
+    base: ["moneyness", "ttm_days", "iv_est_t", "delta", "gamma"]
+    derived: ["volatility_regime", "market_regime", "momentum"]
+    interactions: ["moneyness*ttm_days", "delta*theta"]
+    
+  # Model Settings
+  models:
+    classifier: "lightgbm"          # ML algorithm for classification
+    regressor: "lightgbm"           # ML algorithm for regression
+    hyperparameters:
+      n_estimators: 100
+      learning_rate: 0.1
+      max_depth: 6
+
+# Mode C: True Backtest Settings
+backtest:
+  # Historical Data Period
+  date_span:
+    start: "2022-01-01"            # Backtest start date
+    end: "2024-12-31"              # Backtest end date
+    
+  # Data Source
+  reconstruction:
+    data_source: "bhavcopy"        # Historical data source
+    cache_enabled: true            # Enable data caching
+    validate_data: true            # Validate data quality
+    
+  # Backtest Parameters
+  portfolio:
+    max_positions: 20               # Maximum concurrent positions
+    position_sizing: "equal_weight" # Position sizing strategy
+    rebalance_frequency: "daily"   # Portfolio rebalancing frequency
+    
+  # Transaction Costs
+  costs:
+    round_turn_bps: 60             # Round-trip costs in basis points
+    slippage_mode: "half_spread"   # Slippage model
+    fixed_slippage_bps: 10         # Fixed slippage if applicable
+
+# Output Settings
+output:
+  save_intermediate: true           # Save intermediate processing steps
+  generate_plots: true              # Generate performance plots
+  detailed_logging: true            # Enable detailed logging
+  output_dir: "outputs"            # Output directory
+  
+  # File Formats
+  formats:
+    csv: true                       # Save CSV results
+    json: true                      # Save JSON results
+    parquet: false                  # Save parquet results (optional)
+    
+  # Performance Metrics
+  metrics:
+    include_rank_ic: true          # Include rank information coefficient
+    include_sharpe: true           # Include Sharpe ratio
+    include_sortino: true          # Include Sortino ratio
+    include_max_drawdown: true     # Include maximum drawdown
+    include_win_rate: true         # Include win rate
+    include_profit_factor: true    # Include profit factor
+
+# Risk Management
+risk:
+  max_drawdown: 0.20               # Maximum drawdown threshold
+  stop_loss_pct: 0.50              # Stop loss percentage
+  take_profit_pct: 1.00            # Take profit percentage
+  max_correlation: 0.70            # Maximum correlation between positions
+  
+  # Position Limits
+  limits:
+    max_portfolio_weight: 0.05     # Maximum weight per position
+    max_sector_weight: 0.30        # Maximum weight per sector
+    min_diversification: 10        # Minimum number of positions
+
+# Advanced Settings
+advanced:
+  # Feature Engineering
+  features:
+    include_interactions: true      # Include interaction features
+    include_regime_indicators: true # Include market regime indicators
+    volatility_lookback: 20        # Days for volatility calculation
+    return_lookback: 60            # Days for return calculation
+    
+  # Validation
+  validation:
+    cross_validate: true            # Enable cross-validation
+    test_size: 0.2                 # Test set size for validation
+    random_state: 42               # Random seed for reproducibility
+    n_splits: 5                    # Number of CV splits
+    
+  # Performance Optimization
+  optimization:
+    batch_size: 5000               # Batch size for processing
+    max_memory_gb: 8               # Maximum memory usage
+    parallel_processing: true      # Enable parallel processing
+    cache_results: true            # Cache intermediate results
+
+# Environment Settings
+environment:
+  timezone: "Asia/Kolkata"         # Trading timezone
+  market_hours:
+    start: "09:15"                 # Market open time
+    end: "15:30"                   # Market close time
+  holidays_file: "holidays.json"   # Trading holidays file
+  
+# Debug Settings (for development)
+debug:
+  verbose_output: false            # Verbose logging
+  save_debug_info: false           # Save debug information
+  profile_performance: false       # Profile code performance
+  test_mode: false                 # Enable test mode
+
+# Notes and Comments
+# =================
+# 
+# 1. All dates should be in YYYY-MM-DD format
+# 2. Percentages are expressed as decimals (0.08 = 8%)
+# 3. Time periods are in days unless specified otherwise
+# 4. File paths are relative to the project root directory
+# 5. Memory settings depend on your system capabilities
+# 6. Test different parameter combinations for optimal results
+#
+# For help with specific parameters, see the main README.md
+# or check the individual configuration files in this directory.

@@ -28,6 +28,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from data_pipeline.normalize_snapshot import normalize_snapshot_from_file
 from data_pipeline.attach_underlier_features import attach_underlier_features_from_file
 from data_pipeline.compute_iv_and_greeks import compute_iv_and_greeks_from_file
+from data_pipeline.compute_enhanced_features import compute_enhanced_features_from_file
 from data_pipeline.make_labels import generate_labels_from_file
 from data_pipeline.schemas import validate_dataframe_schema, add_derived_features
 
@@ -40,7 +41,7 @@ class SyntheticBacktestRunner:
     and explores feature importance without requiring historical data reconstruction.
     """
     
-    def __init__(self, config_path: str):
+    def __init__(self, config_path: Optional[str] = None):
         self.config = self._load_config(config_path)
         self.symbol = self.config['symbol']
         self.horizons = self.config['horizons']
@@ -52,8 +53,30 @@ class SyntheticBacktestRunner:
         self.backtest_results = []
         self.performance_metrics = {}
         
-    def _load_config(self, config_path: str) -> Dict[str, Any]:
-        """Load configuration from YAML file."""
+    def _load_config(self, config_path: Optional[str] = None) -> Dict[str, Any]:
+        """Load configuration from YAML file or use defaults."""
+        if config_path is None or not os.path.exists(config_path):
+            # Use default configuration
+            return {
+                'symbol': 'NIFTY',
+                'horizons': [3, 7, 30],
+                'filters': {
+                    'min_oi': 500,
+                    'min_premium': 2.0,
+                    'max_spread_pct': 0.08,
+                    'ttm_bounds': [2, 60]
+                },
+                'costs': {
+                    'round_turn_bps': 60,
+                    'slippage_mode': 'half_spread'
+                },
+                'portfolio': {
+                    'daily_max_positions': 20,
+                    'rank_score': 'pct_diff_times_confidence',
+                    'position_sizing': 'equal_weight'
+                }
+            }
+        
         try:
             with open(config_path, 'r') as f:
                 config = yaml.safe_load(f)
@@ -93,24 +116,28 @@ class SyntheticBacktestRunner:
             print("🧮 Step 3: Computing IV and Greeks...")
             iv_greeks_df, iv_csv = self._compute_iv_greeks(enhanced_csv)
             
-            # Step 4: Generate synthetic labels
-            print("🏷️  Step 4: Generating synthetic labels...")
-            labeled_df, labeled_csv = self._generate_labels(iv_csv)
+            # Step 4: Compute Enhanced Features
+            print("🚀 Step 4: Computing enhanced features...")
+            enhanced_features_df, enhanced_features_csv = self._compute_enhanced_features(iv_csv)
             
-            # Step 5: Run horizon simulations
-            print("⏰ Step 5: Running horizon simulations...")
+            # Step 5: Generate synthetic labels
+            print("🏷️  Step 5: Generating synthetic labels...")
+            labeled_df, labeled_csv = self._generate_labels(enhanced_features_csv)
+            
+            # Step 6: Run horizon simulations
+            print("⏰ Step 6: Running horizon simulations...")
             horizon_results = self._simulate_horizon_scenarios(labeled_df)
             
-            # Step 6: Rank and select positions
-            print("📋 Step 6: Ranking and selecting positions...")
+            # Step 7: Rank and select positions
+            print("📋 Step 7: Ranking and selecting positions...")
             portfolio_results = self._rank_and_select_positions(horizon_results)
             
-            # Step 7: Compute performance metrics
-            print("📊 Step 7: Computing performance metrics...")
+            # Step 8: Compute performance metrics
+            print("📊 Step 8: Computing performance metrics...")
             performance_metrics = self._compute_performance_metrics(portfolio_results)
             
-            # Step 8: Generate reports
-            print("📝 Step 8: Generating reports...")
+            # Step 9: Generate reports
+            print("📝 Step 9: Generating reports...")
             reports = self._generate_reports(portfolio_results, performance_metrics)
             
             # Compile results
@@ -123,6 +150,7 @@ class SyntheticBacktestRunner:
                     'normalized': norm_csv,
                     'enhanced': enhanced_csv,
                     'iv_greeks': iv_csv,
+                    'enhanced_features': enhanced_features_csv,
                     'labeled': labeled_csv
                 },
                 'horizon_results': horizon_results,
@@ -151,6 +179,11 @@ class SyntheticBacktestRunner:
     def _compute_iv_greeks(self, input_csv: str) -> Tuple[pd.DataFrame, str]:
         """Compute IV and Greeks for options data."""
         df, csv_path = compute_iv_and_greeks_from_file(input_csv)
+        return df, csv_path
+    
+    def _compute_enhanced_features(self, input_csv: str) -> Tuple[pd.DataFrame, str]:
+        """Compute enhanced features including mispricing and confidence scores."""
+        df, csv_path = compute_enhanced_features_from_file(input_csv)
         return df, csv_path
     
     def _generate_labels(self, input_csv: str) -> Tuple[pd.DataFrame, str]:
@@ -342,14 +375,16 @@ class SyntheticBacktestRunner:
         rank_formula = self.portfolio.get('rank_score', 'pct_diff_times_confidence')
         
         if rank_formula == 'pct_diff_times_confidence':
-            # Use mispricing percentage × confidence
-            if 'enhanced_mispricing_pct' in scored_df.columns and 'enhanced_confidence' in scored_df.columns:
+            # Use enhanced mispricing percentage × confidence
+            if 'enhanced_ranking_score' in scored_df.columns:
+                scored_df['ranking_score'] = scored_df['enhanced_ranking_score']
+            elif 'enhanced_mispricing_pct' in scored_df.columns and 'enhanced_confidence' in scored_df.columns:
                 scored_df['ranking_score'] = (
                     scored_df['enhanced_mispricing_pct'] * scored_df['enhanced_confidence']
                 )
             else:
                 # Fallback to simple mispricing
-                scored_df['ranking_score'] = scored_df.get('enhanced_mispricing_pct', 0)
+                scored_df['ranking_score'] = scored_df.get('pct_diff', 0)
         
         elif rank_formula == 'iv_skew':
             # Use IV skew as ranking score
@@ -442,6 +477,7 @@ class SyntheticBacktestRunner:
                 'score_std': pos_df['ranking_score'].std(),
                 'avg_confidence': pos_df.get('enhanced_confidence', pd.Series([0])).mean(),
                 'avg_mispricing': pos_df.get('enhanced_mispricing_pct', pd.Series([0])).mean(),
+                'avg_theoretical_diff': pos_df.get('pct_diff', pd.Series([0])).mean(),
                 'position_concentration': pos_df['position_weight'].std() if 'position_weight' in pos_df.columns else 0
             }
             
@@ -536,7 +572,8 @@ class SyntheticBacktestRunner:
                 overall = performance_metrics['overall']
                 f.write(f"  Overall Average Score: {overall.get('avg_ranking_score', 0):.4f}\n")
                 f.write(f"  Overall Average Confidence: {overall.get('avg_confidence', 0):.4f}\n")
-                f.write(f"  Overall Average Mispricing: {overall.get('avg_mispricing', 0):.2f}%\n\n")
+                f.write(f"  Overall Average Mispricing: {overall.get('avg_mispricing', 0):.2f}%\n")
+                f.write(f"  Overall Average Theoretical Diff: {overall.get('avg_theoretical_diff', 0):.2f}%\n\n")
             
             f.write("IMPORTANT NOTES:\n")
             f.write("- This is a SYNTHETIC backtest for pipeline validation only\n")

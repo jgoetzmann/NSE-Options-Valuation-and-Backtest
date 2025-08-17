@@ -16,7 +16,7 @@ Key Functions:
 import json
 import pandas as pd
 from datetime import datetime
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, List, Any, Optional, Tuple, Union
 import sys
 import os
 
@@ -165,23 +165,26 @@ class SnapshotNormalizer:
             # Skip contracts with data conversion errors
             return None
     
-    def normalize_snapshot_json(self, json_data: Dict[str, Any]) -> pd.DataFrame:
+    def normalize_snapshot_json(self, json_data: Union[Dict[str, Any], List[Dict[str, Any]]]) -> pd.DataFrame:
         """
         Normalize the complete snapshot JSON into a DataFrame.
         
         Parameters:
         -----------
-        json_data : Dict[str, Any]
-            Raw JSON data from NSE scraper
+        json_data : Union[Dict[str, Any], List[Dict[str, Any]]
+            Raw JSON data from NSE scraper (either old format or new flat format)
             
         Returns:
         --------
         pd.DataFrame
             Normalized DataFrame with one row per contract
         """
-        all_contracts = []
+        # Check if this is the new flat format (list of contracts)
+        if isinstance(json_data, list):
+            return self._normalize_flat_format(json_data)
         
-        # Extract records from the JSON structure
+        # Handle old nested format
+        all_contracts = []
         records = json_data.get('records', {})
         
         # Get underlying value
@@ -209,6 +212,83 @@ class SnapshotNormalizer:
         
         # Convert date columns
         df['date_t'] = pd.to_datetime(df['date_t'])
+        df['expiry_date'] = pd.to_datetime(df['expiry_date'], format='%d-%b-%Y')
+        
+        # Set dtypes according to schema
+        for col, dtype in PANDAS_DTYPES.items():
+            if col in df.columns:
+                try:
+                    df[col] = df[col].astype(dtype)
+                except (ValueError, TypeError):
+                    # Handle nullable columns
+                    if 'Int' in dtype:
+                        df[col] = pd.to_numeric(df[col], errors='coerce').astype('Int64')
+                    elif dtype == 'float64':
+                        df[col] = pd.to_numeric(df[col], errors='coerce')
+        
+        # Add derived features
+        df = add_derived_features(df)
+        
+        return df
+    
+    def _normalize_flat_format(self, contracts_list: List[Dict[str, Any]]) -> pd.DataFrame:
+        """
+        Normalize the new flat format JSON (list of contracts).
+        
+        Parameters:
+        -----------
+        contracts_list : List[Dict[str, Any]]
+            List of contract dictionaries
+            
+        Returns:
+        --------
+        pd.DataFrame
+            Normalized DataFrame with one row per contract
+        """
+        all_contracts = []
+        
+        for contract in contracts_list:
+            try:
+                # Extract basic contract information
+                contract_dict = {
+                    'symbol': contract.get('symbol', 'NIFTY'),
+                    'expiry_date': contract.get('expiry', ''),
+                    'strike': float(contract.get('strike', 0)),
+                    'option_type': contract.get('optionType', ''),
+                    'premium_t': float(contract.get('lastPrice', 0)),
+                    'openInterest': int(contract.get('openInterest', 0)),
+                    'changeinOpenInterest': int(contract.get('changeInOI', 0)),
+                    'totalTradedVolume': int(contract.get('totalTradedVolume', 0)),
+                    'bidPrice': float(contract.get('bidPrice', 0)) if contract.get('bidPrice') else None,
+                    'askPrice': float(contract.get('askPrice', 0)) if contract.get('askPrice') else None,
+                    'lastPrice': float(contract.get('lastPrice', 0)),
+                    'impliedVolatility': float(contract.get('impliedVolatility', 0)) if contract.get('impliedVolatility') else None,
+                    'S_t': float(contract.get('underlyingValue', 0)),
+                    'date_t': contract.get('timestamp', ''),
+                    'synthetic_flag': 1,  # Mode A is synthetic
+                    'valid_horizon': 1    # Will be updated based on horizon validation
+                }
+                
+                # Skip contracts with invalid data
+                if (contract_dict['strike'] <= 0 or 
+                    contract_dict['premium_t'] <= 0 or
+                    contract_dict['openInterest'] <= 0):
+                    continue
+                
+                all_contracts.append(contract_dict)
+                
+            except (ValueError, TypeError, KeyError) as e:
+                # Skip contracts with data conversion errors
+                continue
+        
+        if not all_contracts:
+            raise ValueError("No valid contracts found in flat format snapshot")
+        
+        # Convert to DataFrame
+        df = pd.DataFrame(all_contracts)
+        
+        # Convert date columns
+        df['date_t'] = pd.to_datetime(df['date_t'], format='%d-%b-%Y %H:%M:%S')
         df['expiry_date'] = pd.to_datetime(df['expiry_date'], format='%d-%b-%Y')
         
         # Set dtypes according to schema

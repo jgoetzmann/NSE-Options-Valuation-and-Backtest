@@ -1,0 +1,16 @@
+{
+  "2025-08-14": {
+    "total_positions": 20,
+    "total_premium": 52980.49999999999,
+    "total_pnl": 0.0,
+    "avg_pnl": 0.0,
+    "hit_rate": 0.0,
+    "sharpe_ratio": 0.0,
+    "sortino_ratio": 0.0,
+    "ce_positions": "8",
+    "pe_positions": "12",
+    "avg_ttm": 441.95,
+    "min_ttm": "7",
+    "max_ttm": "1776"
+  }
+}
