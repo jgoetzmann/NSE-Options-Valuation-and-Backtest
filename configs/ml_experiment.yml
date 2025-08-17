@@ -1,0 +1,197 @@
+# Configuration for Mode B - Train-and-Score ML on Historical Reconstructions; Score Current Snapshot (ML-Live)
+# This mode trains interpretable and boosted-tree models on credible, labeled historical data
+# and uses trained models to score current snapshots
+
+symbol: "NIFTY"
+target:
+  classifier: "POP_label"        # Binary classification target (profit >= 0)
+  regressor: "PnL"               # Regression target (absolute PnL)
+  threshold: 0.0                 # Threshold for positive classification
+  include_roi: true              # Include ROI as additional target
+
+# Analysis horizons for feature engineering
+horizons: [3, 7, 30]
+
+# Feature engineering
+features:
+  base: [
+    "moneyness",                  # S_t / strike
+    "ttm_days",                   # Time to maturity in days
+    "iv_est_t",                   # Estimated implied volatility
+    "delta",                      # Delta Greek
+    "gamma",                      # Gamma Greek
+    "theta",                      # Theta Greek
+    "vega",                       # Vega Greek
+    "rho",                        # Rho Greek
+    "openInterest",               # Open interest
+    "totalTradedVolume",          # Total traded volume
+    "premium_t",                  # Option premium
+    "ret_5d",                     # 5-day underlier return
+    "rv_10d",                     # 10-day realized volatility
+    "spread_pct",                 # Bid-ask spread percentage
+    "oi_rank"                     # Open interest percentile rank
+  ]
+  
+  interactions: [
+    "moneyness*ttm_days",         # Moneyness × time interaction
+    "delta*theta",                # Delta × theta interaction
+    "spread_pct*oi_rank",         # Spread × OI rank interaction
+    "iv_est_t*ttm_days",          # IV × time interaction
+    "moneyness*delta"             # Moneyness × delta interaction
+  ]
+  
+  derived: [
+    "log_moneyness",              # Log of moneyness
+    "ttm_squared",                # Squared time to maturity
+    "iv_skew",                    # IV skew relative to ATM
+    "volume_oi_ratio",            # Volume to OI ratio
+    "premium_per_strike"          # Premium per strike point
+  ]
+  
+  regime: [
+    "vol_regime_20d",             # Volatility regime indicator
+    "trend_regime",               # Trend regime indicator
+    "momentum_regime",            # Momentum regime indicator
+    "market_stress"               # Market stress indicator
+  ]
+
+# Data splits for training and validation
+splits:
+  train_start: "2022-01-01"      # Training data start date
+  train_end: "2024-06-30"        # Training data end date
+  valid_start: "2024-07-01"      # Validation data start date
+  valid_end: "2024-12-31"        # Validation data end date
+  test_start: "2025-01-01"       # Test data start date (if available)
+  test_end: "2025-03-31"         # Test data end date (if available)
+
+# Cross-validation settings
+cv:
+  type: "walk_forward"            # CV type: "walk_forward", "time_series", "stratified"
+  embargo_days: 5                 # Embargo period in days
+  n_splits: 5                     # Number of CV splits
+  test_size: 0.2                  # Test size for each split
+  gap_days: 1                     # Gap between train and test sets
+
+# Model configurations
+models:
+  classifier:
+    type: "lightgbm"              # Model type: "lightgbm", "xgboost", "catboost", "random_forest"
+    params:
+      objective: "binary"
+      metric: "auc"
+      boosting_type: "gbdt"
+      num_leaves: 31
+      learning_rate: 0.05
+      feature_fraction: 0.9
+      bagging_fraction: 0.8
+      bagging_freq: 5
+      verbose: -1
+      random_state: 42
+  
+  regressor:
+    type: "lightgbm"              # Model type for regression
+    params:
+      objective: "regression"
+      metric: "rmse"
+      boosting_type: "gbdt"
+      num_leaves: 31
+      learning_rate: 0.05
+      feature_fraction: 0.9
+      bagging_fraction: 0.8
+      bagging_freq: 5
+      verbose: -1
+      random_state: 42
+
+# Feature preprocessing
+preprocessing:
+  handle_missing_values: true     # Handle missing values
+  imputation_strategy: "median"   # Imputation strategy: "mean", "median", "constant"
+  scaling: "robust"               # Scaling method: "standard", "robust", "minmax", "none"
+  outlier_handling: "iqr"         # Outlier handling: "iqr", "zscore", "none"
+  feature_selection: true         # Perform feature selection
+  selection_method: "mutual_info" # Selection method: "mutual_info", "f_regression", "chi2"
+  max_features: 50                # Maximum number of features to select
+
+# Training settings
+training:
+  early_stopping: true            # Enable early stopping
+  patience: 50                    # Early stopping patience
+  max_epochs: 1000                # Maximum training epochs
+  batch_size: 1024                # Batch size for training
+  validation_split: 0.2           # Validation split during training
+  class_weight: "balanced"        # Class weight strategy
+  sample_weight: true             # Use sample weights for imbalanced data
+
+# Evaluation metrics
+evaluation:
+  classifier_metrics: [
+    "roc_auc",                    # ROC AUC score
+    "pr_auc",                     # Precision-Recall AUC
+    "brier_score",                # Brier score
+    "accuracy",                   # Accuracy
+    "precision",                  # Precision
+    "recall",                     # Recall
+    "f1_score"                    # F1 score
+  ]
+  
+  regressor_metrics: [
+    "rmse",                       # Root mean squared error
+    "mae",                        # Mean absolute error
+    "mape",                       # Mean absolute percentage error
+    "r2_score",                   # R-squared score
+    "rank_ic"                     # Rank information coefficient
+  ]
+  
+  portfolio_metrics: [
+    "sharpe_ratio",               # Sharpe ratio
+    "sortino_ratio",              # Sortino ratio
+    "max_drawdown",               # Maximum drawdown
+    "win_rate",                   # Win rate
+    "profit_factor",              # Profit factor
+    "calmar_ratio"                # Calmar ratio
+  ]
+
+# Model interpretation
+interpretation:
+  feature_importance: true        # Calculate feature importance
+  shap_values: true               # Calculate SHAP values
+  partial_dependence: true        # Generate partial dependence plots
+  feature_interactions: true      # Analyze feature interactions
+  model_explanations: true        # Generate model explanations
+
+# Model registry and storage
+model_store:
+  save_models: true               # Save trained models
+  save_scalers: true              # Save feature scalers
+  save_feature_list: true         # Save feature list
+  save_training_manifest: true    # Save training manifest
+  compression: "joblib"           # Model compression: "joblib", "pickle", "onnx"
+  version_control: true           # Enable model versioning
+  model_metadata: true            # Save model metadata
+
+# Scoring configuration
+scoring:
+  score_formula: "model_pop * model_ev"  # Scoring formula
+  confidence_threshold: 0.6      # Minimum confidence for predictions
+  ensemble_method: "weighted"    # Ensemble method: "weighted", "voting", "stacking"
+  calibration: true               # Calibrate model probabilities
+  uncertainty_quantification: true # Quantify prediction uncertainty
+
+# Output and logging
+output:
+  save_predictions: true          # Save model predictions
+  save_feature_importance: true   # Save feature importance
+  save_model_performance: true    # Save model performance metrics
+  generate_plots: true            # Generate performance plots
+  detailed_logging: true          # Enable detailed logging
+  output_dir: "models/model_store"
+  experiment_name: "nse_options_ml_v1"
+
+# Hyperparameter tuning
+hyperparameter_tuning:
+  enable: true                    # Enable hyperparameter tuning
+  method: "optuna"                # Tuning method: "optuna", "grid_search", "random_search"
+  n_trials: 100                   # Number of trials for optimization
+  optimization_metric: "roc_auc"  # Metric to optimize
+  cv_folds: 5                     # CV folds for tuning
+  early_stopping: true            # Early stopping during tuning
