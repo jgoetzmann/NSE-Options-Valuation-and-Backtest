@@ -78,8 +78,7 @@ def main():
     
     try:
         # Import and run the backtest
-        sys.path.append("backtests")
-        from run_true_backtest import TrueBacktestRunner
+        from backtests.run_true_backtest import TrueBacktestRunner
         
         runner = TrueBacktestRunner(config_path)
         

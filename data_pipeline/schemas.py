@@ -292,12 +292,21 @@ def add_derived_features(df: pd.DataFrame) -> pd.DataFrame:
 class BacktestConfig:
     """Configuration for backtest runs."""
     symbol: str
-    date_span: Dict[str, str]  # start, end
-    horizons: List[int]
-    filters: Dict[str, Any]
-    costs: Dict[str, Any]
-    portfolio: Dict[str, Any]
-    metrics: Dict[str, Any]
+    synthetic_flag: bool = False
+    date_span: Dict[str, str] = None  # start, end
+    horizons: List[int] = None
+    filters: Dict[str, Any] = None
+    costs: Dict[str, Any] = None
+    portfolio: Dict[str, Any] = None
+    reconstruction: Dict[str, Any] = None
+    features: Dict[str, Any] = None
+    risk: Dict[str, Any] = None
+    output: Dict[str, Any] = None
+    validation: Dict[str, Any] = None
+    metrics: Dict[str, Any] = None
+    quality: Dict[str, Any] = None
+    ml_prep: Dict[str, Any] = None
+    methodology: Dict[str, Any] = None
 
 def validate_backtest_config(config: BacktestConfig) -> Dict[str, Any]:
     """
@@ -332,11 +341,12 @@ def validate_backtest_config(config: BacktestConfig) -> Dict[str, Any]:
     
     # Validate date span
     try:
-        start_date = pd.to_datetime(config.date_span['start'])
-        end_date = pd.to_datetime(config.date_span['end'])
-        if start_date >= end_date:
-            validation_result['errors'].append("Start date must be before end date")
-            validation_result['is_valid'] = False
+        if config.date_span:
+            start_date = pd.to_datetime(config.date_span['start'])
+            end_date = pd.to_datetime(config.date_span['end'])
+            if start_date > end_date:
+                validation_result['errors'].append("Start date must be before or equal to end date")
+                validation_result['is_valid'] = False
     except (KeyError, ValueError) as e:
         validation_result['errors'].append(f"Invalid date format: {e}")
         validation_result['is_valid'] = False

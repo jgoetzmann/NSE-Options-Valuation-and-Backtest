@@ -1,0 +1,20 @@
+True EOD Backtest Summary for NIFTY
+Period: 2025-08-14 to 2025-08-14
+==================================================
+
+Overall Performance:
+Total PnL: 0.00
+Total Positions: 20
+Average Daily PnL: 0.00
+Average Hit Rate: 0.00%
+Average Sharpe Ratio: 0.00
+
+Portfolio Composition:
+CE Positions: 8
+PE Positions: 12
+
+Configuration:
+Symbol: NIFTY
+Filters: {'min_oi': 500, 'min_premium': 2.0, 'max_spread_pct': 0.08, 'ttm_bounds': {'min': 2, 'max': 365}, 'min_volume': 100, 'max_iv': 2.0, 'min_contracts_per_expiry': 10, 'max_strike_range': 0.5}
+Portfolio: {'daily_max_positions': 20, 'rank_score': 'pct_diff_times_confidence', 'position_sizing': 'equal_weight', 'max_portfolio_weight': 0.05, 'rebalance_frequency': 'daily'}
+Costs: {'round_turn_bps': 60, 'slippage_mode': 'half_spread', 'fixed_slippage_bps': 10, 'market_impact_bps': 5, 'clearing_fees': 0.05}

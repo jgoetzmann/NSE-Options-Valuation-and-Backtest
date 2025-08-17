@@ -35,13 +35,13 @@ from tqdm import tqdm
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from schemas import (
+from data_pipeline.schemas import (
     NORMALIZED_TABLE_SCHEMA, 
     PANDAS_DTYPES,
     validate_dataframe_schema
 )
-from compute_iv_and_greeks import IVAndGreeksComputer
-from make_labels import LabelGenerator
+from data_pipeline.compute_iv_and_greeks import IVAndGreeksComputer
+from data_pipeline.make_labels import LabelGenerator
 
 # Configure logging
 logging.basicConfig(
@@ -240,14 +240,25 @@ class EODChainReconstructor:
                 logger.warning(f"No underlier data found for {underlier_symbol}")
                 return df
             
-            # Extract close prices
+            # Extract close prices and ensure it's a Series
             underlier_closes = underlier_data['Close']
+            if isinstance(underlier_closes, pd.DataFrame):
+                underlier_closes = underlier_closes.iloc[:, 0]  # Take first column if DataFrame
+            elif isinstance(underlier_closes, pd.Series):
+                pass  # Already correct format
+            else:
+                logger.warning(f"Unexpected underlier_closes type: {type(underlier_closes)}")
+                return df
+            
+            # Convert dates to datetime for proper mapping
+            df['date_t_dt'] = pd.to_datetime(df['date_t'])
+            df['expiry_date_dt'] = pd.to_datetime(df['expiry_date'])
             
             # Attach S_t (underlier price at trade date)
-            df['S_t'] = df['date_t'].map(underlier_closes)
+            df['S_t'] = df['date_t_dt'].map(underlier_closes)
             
             # Attach S_T (underlier price at expiry) for expired contracts
-            df['S_T'] = df['expiry_date'].map(underlier_closes)
+            df['S_T'] = df['expiry_date_dt'].map(underlier_closes)
             
             # Compute returns and volatility features
             df = self._compute_underlier_features(df, underlier_closes)

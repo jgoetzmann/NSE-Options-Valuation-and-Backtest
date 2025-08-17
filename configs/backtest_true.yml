@@ -7,8 +7,8 @@ synthetic_flag: false
 
 # Date span for historical reconstruction
 date_span:
-  start: "2022-01-01"            # Start date for data reconstruction
-  end: "2024-12-31"              # End date for data reconstruction
+  start: "2025-08-14"            # Start date for data reconstruction
+  end: "2025-08-14"              # End date for data reconstruction
   exclude_holidays: true          # Exclude trading holidays
   exclude_weekends: true          # Exclude weekends
 
