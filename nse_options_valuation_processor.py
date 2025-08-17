@@ -182,7 +182,8 @@ class NSEOptionsValuationProcessor:
             
             # Run both valuation models
             enhanced_rating, enhanced_mispricing_pct, enhanced_confidence = option_valuation(
-                theoretical_price, market_price, S, K, T, sigma, bid, ask, option_type
+                theoretical_price, market_price, S, K, T, sigma, bid, ask, option_type,
+                total_traded_volume=option_data.get('totalTradedVolume')
             )
             
             simple_rating, simple_mispricing_pct = simple_option_valuation(
