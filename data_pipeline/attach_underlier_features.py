@@ -207,7 +207,10 @@ class UnderlierFeatureAttacher:
         # Prepare for merge
         hist_data = hist_data.reset_index()
         hist_data['Date'] = pd.to_datetime(hist_data['Date']).dt.date
-        options_df['date_t_date'] = options_df['date_t'].dt.date
+        
+        # Use the actual snapshot date for all options (since they're from the same snapshot)
+        snapshot_date = options_df['date_t'].iloc[0].date()
+        options_df['date_t_date'] = snapshot_date
         
         # Merge features
         result_df = pd.merge(

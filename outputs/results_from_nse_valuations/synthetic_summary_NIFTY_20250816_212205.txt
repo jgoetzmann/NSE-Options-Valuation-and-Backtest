@@ -1,0 +1,38 @@
+Synthetic Backtest Summary - NIFTY
+Generated on: 2025-08-16 21:22:05
+Backtest Type: Mode A (SB-CS)
+================================================================================
+
+CONFIGURATION:
+  Symbol: NIFTY
+  Horizons: [3, 7, 30]
+  Max Positions: 20
+  Ranking Formula: pct_diff_times_confidence
+
+PORTFOLIO RESULTS:
+  3-Day Horizon:
+    Total Contracts: 280
+    Selected Positions: 20
+    Average Score: nan
+
+  7-Day Horizon:
+    Total Contracts: 207
+    Selected Positions: 20
+    Average Score: nan
+
+  30-Day Horizon:
+    Total Contracts: 100
+    Selected Positions: 20
+    Average Score: nan
+
+PERFORMANCE METRICS:
+  Overall Average Score: nan
+  Overall Average Confidence: nan
+  Overall Average Mispricing: nan%
+  Overall Average Theoretical Diff: 0.00%
+
+IMPORTANT NOTES:
+- This is a SYNTHETIC backtest for pipeline validation only
+- Results are NOT indicative of actual trading performance
+- Use for feature exploration and system validation
+- Always conduct thorough testing before live trading
