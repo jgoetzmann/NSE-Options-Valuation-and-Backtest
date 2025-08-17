@@ -7,23 +7,23 @@
 
 A comprehensive, enterprise-level toolkit for options analysis that combines **Black-Scholes pricing/Greeks**, **NSE (India) option-chain scraping**, **advanced backtesting**, and **machine learning capabilities**. This platform provides professional-grade options analysis with real-time data processing, sophisticated valuation algorithms, and three distinct execution modes for different use cases.
 
-## 🚀 **Quick Start (5 minutes)**
+## Quick Start (5 minutes)
 
-### **1. Installation**
+### Installation
 ```bash
 git clone https://github.com/yourusername/NSE-Options-Valuation-and-Backtest.git
 cd NSE-Options-Valuation-and-Backtest
 pip install -r requirements.txt
 ```
 
-### **2. Get Current Market Data**
+### Get Current Market Data
 ```bash
 python nse_options_scraper.py
 ```
 
-### **3. Run Analysis (Choose Your Mode)**
+### Run Analysis (Choose Your Mode)
 ```bash
-# Mode A: Quick analysis of current market (Recommended for beginners)
+# Mode A: Quick analysis of current market
 python run_mode_a.py
 
 # Mode B: ML-powered analysis (Requires historical data)
@@ -35,75 +35,75 @@ python run_mode_c.py
 
 ---
 
-## 🎯 **What This Platform Does**
+## What This Platform Does
 
-### **Core Capabilities**
-- **📊 Real-time NSE Data**: Live option-chain scraping from National Stock Exchange of India
-- **🧮 Professional Valuation**: Black-Scholes pricing with advanced Greeks calculation
-- **🤖 Machine Learning**: ML-powered opportunity scoring and risk assessment
-- **📈 Advanced Backtesting**: Three execution modes for different analysis needs
-- **🔍 Feature Engineering**: 50+ sophisticated features for options analysis
-- **📋 Portfolio Construction**: Intelligent position selection and sizing algorithms
+### Core Capabilities
+- **Real-time NSE Data**: Live option-chain scraping from National Stock Exchange of India
+- **Professional Valuation**: Black-Scholes pricing with advanced Greeks calculation
+- **Machine Learning**: ML-powered opportunity scoring and risk assessment
+- **Advanced Backtesting**: Three execution modes for different analysis needs
+- **Feature Engineering**: 50+ sophisticated features for options analysis
+- **Portfolio Construction**: Intelligent position selection and sizing algorithms
 
-### **Three-Execution-Mode System**
+### Three-Execution-Mode System
 | Mode | Purpose | Best For | Time Required |
 |------|---------|----------|---------------|
-| **Mode A** | Pipeline validation & opportunity screening | Daily analysis, beginners | 2-5 minutes |
+| **Mode A** | Pipeline validation & opportunity screening | Daily analysis, system validation | 2-5 minutes |
 | **Mode B** | ML training & live scoring | Traders, researchers | 15-30 minutes |
 | **Mode C** | Historical backtesting | Strategy validation, research | 30-60 minutes |
 
 ---
 
-## 🏗️ **Project Architecture**
+## Project Architecture
 
 ```
 NSE-Options-Valuation-and-Backtest/
-├── 📁 data_pipeline/           # Core data processing modules
+├── data_pipeline/           # Core data processing modules
 │   ├── schemas.py              # Data validation and schemas
 │   ├── normalize_snapshot.py   # Live data normalization
 │   ├── compute_iv_and_greeks.py # IV calculation & Greeks
 │   ├── compute_enhanced_features.py # Advanced feature engineering
 │   └── make_labels.py          # ML label generation
-├── 📁 backtests/               # Backtesting execution modules
+├── backtests/               # Backtesting execution modules
 │   ├── run_synthetic_on_snapshot.py  # Mode A runner
 │   ├── run_true_backtest.py          # Mode C runner
 │   └── reports.py                    # Performance analysis
-├── 📁 models/                   # Machine learning modules
+├── models/                   # Machine learning modules
 │   ├── train.py                # Model training (Mode B)
 │   ├── score_snapshot.py       # Live scoring (Mode B)
 │   └── model_store/            # Trained models
-├── 📁 configs/                  # Configuration files
+├── configs/                  # Configuration files
 │   ├── backtest_synth.yml      # Mode A settings
 │   ├── backtest_true.yml       # Mode C settings
 │   └── ml_experiment.yml       # Mode B settings
-├── 📁 outputs/                  # Results and reports
-├── 📁 reconstructed/            # Historical data storage
-└── 🚀 run_mode_a.py, run_mode_b.py, run_mode_c.py  # Execution scripts
+├── outputs/                  # Results and reports
+├── reconstructed/            # Historical data storage
+└── run_mode_a.py, run_mode_b.py, run_mode_c.py  # Execution scripts
 ```
 
 ---
 
-## 🎯 **Execution Modes Explained**
+## Execution Modes Explained
 
-### **Mode A: Synthetic Backtest (SB-CS) ⚡ FAST**
+### Mode A: Synthetic Backtest (SB-CS) - FAST
 **Purpose**: Daily opportunity screening and pipeline validation
 
 **What You Get**:
-- ✅ **Live market analysis** in 2-5 minutes
-- ✅ **Top 20 opportunities** ranked by sophisticated algorithms
-- ✅ **Enhanced valuation scores** with confidence levels
-- ✅ **Multiple time horizons** (3, 7, 30 days)
-- ✅ **Professional reports** and visualizations
+- Live market analysis in 2-5 minutes
+- Top 20 opportunities ranked by sophisticated algorithms
+- Enhanced valuation scores with confidence levels
+- Multiple time horizons (3, 7, 30 days)
+- Professional reports and visualizations
 
 **Perfect For**:
 - Daily market analysis
 - Opportunity screening
 - System validation
-- Educational purposes
+- Research and development
 
 **Example Output**:
 ```
-🎯 TOP 5 OPPORTUNITIES (Mode A)
+TOP 5 OPPORTUNITIES (Mode A)
 1. NIFTY 19500 CE (7 days) - Score: 8.7/10, Confidence: 85%
 2. NIFTY 19400 PE (3 days) - Score: 8.2/10, Confidence: 78%
 3. NIFTY 19600 CE (30 days) - Score: 7.9/10, Confidence: 72%
@@ -111,15 +111,15 @@ NSE-Options-Valuation-and-Backtest/
 
 ---
 
-### **Mode B: Machine Learning (ML-Live) 🤖 SMART**
+### Mode B: Machine Learning (ML-Live) - SMART
 **Purpose**: ML-powered trading decisions and risk assessment
 
 **What You Get**:
-- ✅ **Trained ML models** on historical data
-- ✅ **Probability of profit** predictions
-- ✅ **Expected PnL** estimates
-- ✅ **Feature importance** analysis
-- ✅ **Confidence scoring** for each prediction
+- Trained ML models on historical data
+- Probability of profit predictions
+- Expected PnL estimates
+- Feature importance analysis
+- Confidence scoring for each prediction
 
 **Perfect For**:
 - Live trading decisions
@@ -129,22 +129,22 @@ NSE-Options-Valuation-and-Backtest/
 
 **Example Output**:
 ```
-🤖 ML PREDICTIONS (Mode B)
+ML PREDICTIONS (Mode B)
 NIFTY 19500 CE: POP: 73%, Expected PnL: ₹45, Confidence: 82%
 NIFTY 19400 PE: POP: 68%, Expected PnL: ₹38, Confidence: 79%
 ```
 
 ---
 
-### **Mode C: True Backtest (EOD-True) 📊 ACCURATE**
+### Mode C: True Backtest (EOD-True) - ACCURATE
 **Purpose**: Historically accurate strategy validation
 
 **What You Get**:
-- ✅ **Real historical performance** data
-- ✅ **True PnL and returns** calculations
-- ✅ **Risk metrics** (Sharpe, Sortino, max drawdown)
-- ✅ **Portfolio analysis** and attribution
-- ✅ **Data for ML training**
+- Real historical performance data
+- True PnL and returns calculations
+- Risk metrics (Sharpe, Sortino, max drawdown)
+- Portfolio analysis and attribution
+- Data for ML training
 
 **Perfect For**:
 - Strategy validation
@@ -154,22 +154,22 @@ NIFTY 19400 PE: POP: 68%, Expected PnL: ₹38, Confidence: 79%
 
 **Example Output**:
 ```
-📊 BACKTEST RESULTS (Mode C)
+BACKTEST RESULTS (Mode C)
 Total Return: 23.4% | Sharpe Ratio: 1.67
 Max Drawdown: -8.2% | Win Rate: 64.3%
 ```
 
 ---
 
-## 📦 **Installation & Setup**
+## Installation & Setup
 
-### **System Requirements**
+### System Requirements
 - **Python**: 3.8 or higher
 - **Memory**: 4GB RAM minimum (8GB recommended)
 - **Storage**: 2GB free space
 - **OS**: Windows, macOS, or Linux
 
-### **Installation Steps**
+### Installation Steps
 ```bash
 # 1. Clone the repository
 git clone https://github.com/yourusername/NSE-Options-Valuation-and-Backtest.git
@@ -179,10 +179,10 @@ cd NSE-Options-Valuation-and-Backtest
 pip install -r requirements.txt
 
 # 3. Verify installation
-python -c "import pandas, numpy, scipy, yfinance; print('✅ All dependencies installed!')"
+python -c "import pandas, numpy, scipy, yfinance; print('All dependencies installed!')"
 ```
 
-### **First Run Setup**
+### First Run Setup
 ```bash
 # 1. Get current market data
 python nse_options_scraper.py
@@ -195,9 +195,9 @@ python run_mode_a.py
 
 ---
 
-## 🔧 **Configuration & Customization**
+## Configuration & Customization
 
-### **Mode A Configuration** (`configs/backtest_synth.yml`)
+### Mode A Configuration (`configs/backtest_synth.yml`)
 ```yaml
 symbol: "NIFTY"                    # Index to analyze
 horizons: [3, 7, 30]             # Analysis timeframes
@@ -210,7 +210,7 @@ portfolio:
   rank_score: "pct_diff_times_confidence"  # Ranking formula
 ```
 
-### **Mode B Configuration** (`configs/ml_experiment.yml`)
+### Mode B Configuration (`configs/ml_experiment.yml`)
 ```yaml
 target:
   classifier: "POP_label"         # Profit probability target
@@ -223,7 +223,7 @@ splits:
   train_end: "2024-06-30"        # Training period end
 ```
 
-### **Mode C Configuration** (`configs/backtest_true.yml`)
+### Mode C Configuration (`configs/backtest_true.yml`)
 ```yaml
 symbol: "NIFTY"
 date_span:
@@ -236,9 +236,9 @@ reconstruction:
 
 ---
 
-## 📊 **Data Schema & Features**
+## Data Schema & Features
 
-### **Core Contract Data**
+### Core Contract Data
 | Column | Description | Example |
 |--------|-------------|---------|
 | `symbol` | Underlying symbol | "NIFTY" |
@@ -247,7 +247,7 @@ reconstruction:
 | `expiry_date` | Expiry date | "2025-08-28" |
 | `premium_t` | Current premium | 45.50 |
 
-### **Computed Features**
+### Computed Features
 | Feature | Description | Range |
 |---------|-------------|-------|
 | `moneyness` | S/K ratio | 0.5 - 2.0 |
@@ -256,7 +256,7 @@ reconstruction:
 | `delta`, `gamma`, `theta`, `vega` | Greeks | Various |
 | `enhanced_confidence` | Multi-factor confidence | 0.0 - 1.0 |
 
-### **ML Labels**
+### ML Labels
 | Label | Description | Type |
 |-------|-------------|------|
 | `POP_label` | Profit probability | Binary (0/1) |
@@ -265,9 +265,9 @@ reconstruction:
 
 ---
 
-## 🚀 **Usage Examples**
+## Usage Examples
 
-### **Daily Market Analysis (Mode A)**
+### Daily Market Analysis (Mode A)
 ```bash
 # 1. Get fresh market data
 python nse_options_scraper.py
@@ -280,7 +280,7 @@ ls outputs/csv/synthetic_backtest_*.csv
 ls outputs/results_from_nse_valuations/synthetic_summary_*.txt
 ```
 
-### **ML Model Training (Mode B)**
+### ML Model Training (Mode B)
 ```bash
 # 1. Ensure you have historical data
 ls reconstructed/parquet/
@@ -292,7 +292,7 @@ python run_mode_b.py
 ls models/model_store/
 ```
 
-### **Historical Backtesting (Mode C)**
+### Historical Backtesting (Mode C)
 ```bash
 # 1. Run backtest
 python run_mode_c.py
@@ -304,11 +304,11 @@ ls outputs/true_backtest_summary_*.txt
 
 ---
 
-## 📚 **All Available Scripts and How to Run Them**
+## All Available Scripts and How to Run Them
 
-### **🚀 Three-Mode System (Main Platform)**
+### Three-Mode System (Main Platform)
 ```bash
-# Mode A: Synthetic Backtest (Recommended for beginners)
+# Mode A: Synthetic Backtest
 python run_mode_a.py
 
 # Mode B: ML Training and Scoring (Requires historical data)
@@ -318,7 +318,7 @@ python run_mode_b.py
 python run_mode_c.py
 ```
 
-### **📊 NSE Data Collection and Analysis**
+### NSE Data Collection and Analysis
 ```bash
 # NSE Options Scraper - Get live market data
 python nse_options_scraper.py
@@ -327,7 +327,7 @@ python nse_options_scraper.py
 python nse_options_valuation_processor.py
 ```
 
-### **🇺🇸 US Options Analysis Tools**
+### US Options Analysis Tools
 ```bash
 # Basic US Options Analysis (Greeks only)
 python option_info_manual.py
@@ -338,22 +338,22 @@ python option_info_manual_valuation_processor.py
 
 ---
 
-## 🎯 **Script Details and Use Cases**
+## Script Details and Use Cases
 
-### **Three-Mode System Scripts**
+### Three-Mode System Scripts
 | Script | Purpose | Best For | Time Required |
 |--------|---------|----------|---------------|
-| `run_mode_a.py` | Daily opportunity screening | Beginners, daily analysis | 2-5 minutes |
+| `run_mode_a.py` | Daily opportunity screening | Daily analysis, system validation | 2-5 minutes |
 | `run_mode_b.py` | ML model training & scoring | Traders, researchers | 15-30 minutes |
 | `run_mode_c.py` | Historical backtesting | Strategy validation | 30-60 minutes |
 
-### **NSE Data Processing Scripts**
+### NSE Data Processing Scripts
 | Script | Purpose | Output | Use Case |
 |--------|---------|--------|----------|
 | `nse_options_scraper.py` | Fetch live NSE data | Raw & processed JSON | Data collection |
 | `nse_options_valuation_processor.py` | Complete analysis pipeline | CSV + reports | End-to-end analysis |
 
-### **US Options Analysis Scripts**
+### US Options Analysis Scripts
 | Script | Purpose | Features | Best For |
 |--------|---------|----------|----------|
 | `option_info_manual.py` | Basic Greeks calculation | Delta, Gamma, Theta, Vega, Rho | Quick analysis |
@@ -361,15 +361,15 @@ python option_info_manual_valuation_processor.py
 
 ---
 
-## 📈 **Performance Metrics & KPIs**
+## Performance Metrics & KPIs
 
-### **Common Metrics Across All Modes**
+### Common Metrics Across All Modes
 - **Returns**: PnL, ROI, hit rate, cumulative returns
 - **Risk**: Sharpe ratio, Sortino ratio, maximum drawdown, VaR
 - **Portfolio**: Position counts, composition analysis, turnover
 - **Data Quality**: Missing data, validation results, convergence rates
 
-### **Mode-Specific Metrics**
+### Mode-Specific Metrics
 | Mode | Key Metrics | Focus |
 |------|-------------|-------|
 | **A** | Enhanced ranking scores, synthetic performance | Opportunity screening |
@@ -378,88 +378,88 @@ python option_info_manual_valuation_processor.py
 
 ---
 
-## 🔒 **Safeguards & Best Practices**
+## Safeguards & Best Practices
 
-### **Data Integrity**
-- ✅ **Schema validation** at multiple pipeline stages
-- ✅ **Feature parity checks** for ML models
-- ✅ **Timestamp validation** and chronological ordering
-- ✅ **Duplicate detection** and handling
+### Data Integrity
+- Schema validation at multiple pipeline stages
+- Feature parity checks for ML models
+- Timestamp validation and chronological ordering
+- Duplicate detection and handling
 
-### **Model Validation**
-- ✅ **Walk-forward validation** for time series data
-- ✅ **Feature availability** checks
-- ✅ **Preprocessing consistency** across training/scoring
-- ✅ **Model artifact versioning** and metadata
+### Model Validation
+- Walk-forward validation for time series data
+- Feature availability checks
+- Preprocessing consistency across training/scoring
+- Model artifact versioning and metadata
 
-### **Performance Monitoring**
-- ✅ **Comprehensive logging** and error handling
-- ✅ **Progress tracking** for long operations
-- ✅ **Memory-efficient** batch processing
-- ✅ **Recovery mechanisms** for failed operations
-
----
-
-## 🚨 **Important Notes & Limitations**
-
-### **Mode A (Synthetic)**
-- ⚠️ **Results are NOT indicative of actual trading performance**
-- ⚠️ **All labels are "pending"** (no realized outcomes)
-- ⚠️ **Use for pipeline validation and feature exploration only**
-- ✅ **Perfect for system testing and parameter tuning**
-
-### **Mode B (ML)**
-- ⚠️ **Requires historical data from Mode C**
-- ⚠️ **Models need regular retraining** for market adaptation
-- ⚠️ **Feature engineering must match** between training/scoring
-- ✅ **Provides ML-powered insights for live trading**
-
-### **Mode C (True Backtest)**
-- ⚠️ **Requires official historical derivatives data**
-- ⚠️ **Data reconstruction can be time-consuming**
-- ⚠️ **Limited by data availability** and quality
-- ✅ **Historically accurate backtesting for research**
+### Performance Monitoring
+- Comprehensive logging and error handling
+- Progress tracking for long operations
+- Memory-efficient batch processing
+- Recovery mechanisms for failed operations
 
 ---
 
-## 🎯 **Use Cases & Target Users**
+## Important Notes & Limitations
 
-### **For Researchers & Academics**
+### Mode A (Synthetic)
+- Results are NOT indicative of actual trading performance
+- All labels are "pending" (no realized outcomes)
+- Use for pipeline validation and feature exploration only
+- Perfect for system testing and parameter tuning
+
+### Mode B (ML)
+- Requires historical data from Mode C
+- Models need regular retraining for market adaptation
+- Feature engineering must match between training/scoring
+- Provides ML-powered insights for live trading
+
+### Mode C (True Backtest)
+- Requires official historical derivatives data
+- Data reconstruction can be time-consuming
+- Limited by data availability and quality
+- Historically accurate backtesting for research
+
+---
+
+## Use Cases & Target Users
+
+### For Researchers & Academics
 - **Mode A**: Quick system validation and feature exploration
 - **Mode C**: Historically accurate backtesting for papers
 - **All Modes**: Comprehensive data analysis and visualization
 
-### **For Traders & Analysts**
+### For Traders & Analysts
 - **Mode A**: Daily opportunity screening and market analysis
 - **Mode B**: ML-powered trading decisions and risk assessment
 - **Mode C**: Strategy validation and performance attribution
 
-### **For Developers & Engineers**
+### For Developers & Engineers
 - **Mode A**: Pipeline testing and system validation
 - **Mode B**: ML model development and deployment
 - **Mode C**: Data quality validation and integrity checks
 
-### **For Educational Purposes**
+### For Educational Purposes
 - **Mode A**: Understanding options valuation and Greeks
 - **Mode B**: Learning ML applications in finance
 - **Mode C**: Studying historical market behavior
 
 ---
 
-## 🔧 **Troubleshooting & Support**
+## Troubleshooting & Support
 
-### **Common Issues & Solutions**
+### Common Issues & Solutions
 
-#### **1. Import Errors**
+#### Import Errors
 ```bash
 # Solution: Install dependencies
 pip install -r requirements.txt
 
 # Verify installation
-python -c "import pandas, numpy, scipy; print('✅ OK')"
+python -c "import pandas, numpy, scipy; print('OK')"
 ```
 
-#### **2. No Snapshot Data**
+#### No Snapshot Data
 ```bash
 # Solution: Run scraper first
 python nse_options_scraper.py
@@ -468,7 +468,7 @@ python nse_options_scraper.py
 ls outputs/json/
 ```
 
-#### **3. ML Training Fails**
+#### ML Training Fails
 ```bash
 # Solution: Check historical data
 ls reconstructed/parquet/
@@ -476,7 +476,7 @@ ls reconstructed/parquet/
 # If empty, run Mode C first or get sample data
 ```
 
-#### **4. Memory Issues**
+#### Memory Issues
 ```yaml
 # In config files, reduce batch sizes
 processing:
@@ -484,7 +484,7 @@ processing:
   max_memory_gb: 4  # Limit memory usage
 ```
 
-### **Debug Mode**
+### Debug Mode
 Enable detailed logging in configuration files:
 ```yaml
 output:
@@ -492,7 +492,7 @@ output:
   save_intermediate: true
 ```
 
-### **Validation Commands**
+### Validation Commands
 ```python
 # Validate data quality
 from data_pipeline.schemas import validate_dataframe_schema
@@ -502,9 +502,9 @@ print(validation_result)
 
 ---
 
-## 📚 **Advanced Usage**
+## Advanced Usage
 
-### **Custom Feature Engineering**
+### Custom Feature Engineering
 ```python
 # Add custom features in compute_enhanced_features.py
 def add_custom_features(df):
@@ -513,7 +513,7 @@ def add_custom_features(df):
     return df
 ```
 
-### **Custom ML Models**
+### Custom ML Models
 ```python
 # Extend models/train.py for custom algorithms
 from sklearn.ensemble import RandomForestClassifier
@@ -525,7 +525,7 @@ class CustomMLTrainer(MLModelTrainer):
         return model
 ```
 
-### **Custom Backtesting Strategies**
+### Custom Backtesting Strategies
 ```python
 # Extend backtests/run_true_backtest.py
 class CustomBacktestRunner(TrueBacktestRunner):
@@ -536,9 +536,9 @@ class CustomBacktestRunner(TrueBacktestRunner):
 
 ---
 
-## 🔧 **Individual Script Deep Dive**
+## Individual Script Deep Dive
 
-### **1. NSE Options Scraper (`nse_options_scraper.py`)**
+### 1. NSE Options Scraper (`nse_options_scraper.py`)
 **Purpose**: Fetch live options data from National Stock Exchange of India
 
 **Features**:
@@ -562,7 +562,7 @@ python nse_options_scraper.py --symbol BANKNIFTY --kind indices
 
 ---
 
-### **2. Complete NSE Analysis Pipeline (`nse_options_valuation_processor.py`)**
+### 2. Complete NSE Analysis Pipeline (`nse_options_valuation_processor.py`)
 **Purpose**: End-to-end NSE options analysis with comprehensive valuation
 
 **Features**:
@@ -589,7 +589,7 @@ python nse_options_valuation_processor.py --symbol FINNIFTY
 
 ---
 
-### **3. Basic US Options Analysis (`option_info_manual.py`)**
+### 3. Basic US Options Analysis (`option_info_manual.py`)
 **Purpose**: Quick Greeks calculation for individual US options
 
 **Features**:
@@ -612,7 +612,7 @@ python option_info_manual.py
 
 ---
 
-### **4. Advanced US Options Analysis (`option_info_manual_valuation_processor.py`)**
+### 4. Advanced US Options Analysis (`option_info_manual_valuation_processor.py`)
 **Purpose**: Comprehensive US options analysis with advanced valuation
 
 **Features**:
@@ -633,7 +633,7 @@ python option_info_manual_valuation_processor.py
 
 ---
 
-### **5. Three-Mode Execution Scripts**
+### 5. Three-Mode Execution Scripts
 **Purpose**: Main platform execution with different analysis modes
 
 **Mode A (`run_mode_a.py`)**:
@@ -656,38 +656,16 @@ python option_info_manual_valuation_processor.py
 
 ---
 
-## 🗺️ **Roadmap & Future Enhancements**
-
-### **Short Term (1-3 months)**
-- ✅ **Multi-symbol support** (BANKNIFTY, FINNIFTY, equity options)
-- ✅ **Enhanced volatility surface** modeling
-- ✅ **Portfolio-level analysis** and optimization
-- ✅ **Real-time data streaming** capabilities
-
-### **Medium Term (3-6 months)**
-- 🔄 **Web interface** for data visualization
-- 🔄 **Advanced risk management** features
-- 🔄 **Multi-asset portfolio** optimization
-- 🔄 **API endpoints** for external integration
-
-### **Long Term (6+ months)**
-- 📋 **Cloud deployment** and scaling
-- 📋 **Deep learning models** (LSTM, Transformers)
-- 📋 **Reinforcement learning** for strategy optimization
-- 📋 **Institutional-grade risk analytics**
-
----
-
-## 📄 **License**
+## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🎉 **Key Takeaways**
+## Key Takeaways
 
 This platform is designed for **educational and research purposes**. Always conduct thorough testing before using in live trading environments.
 
 **Start with Mode A** to validate your system, then explore Mode C for historical analysis, and finally use Mode B for ML-powered insights. Each mode serves a specific purpose and builds upon the previous ones.
 
-**Happy Options Trading and Analysis! 🚀📈**
+**Happy Options Trading and Analysis!**
 
